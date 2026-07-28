@@ -1,0 +1,12 @@
+
+MenuItems:
+- Fülbelövés otthon
+- Fülbelövés rendezvéyen
+- Ékszer Futár webshop
+- Charm Bar webshop
+- Charm Bar rendezvéyen
+- Események
+- Kapcsolat
+
+background-main-color: #f9f1ed
+font-primary-color: #000000
