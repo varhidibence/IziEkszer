@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IziÉkszer - Ékszer Élmény</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Desktop Navbar -->
+  <nav class="navbar-desktop">
+    <div class="nav-container">
+      <a class="nav-logo" href="#">
+        <img src="../pics/main_logo_transparent.png" alt="IziÉkszer">
+      </a>
+      <ul class="nav-links">
+        <li><a href="#Fülbelövés-otthon">Fülbelövés Otthon</a></li>
+        <li><a href="#Fülbelövés-rendezveny">Fülbelövés Rendezvényen</a></li>
+        <li><a href="#Ékszer-Futár">Ékszer Futár Webshop</a></li>
+        <li><a href="#charm-bar-shop">Charm Bar Webshop</a></li>
+        <li><a href="#charm-bar">Charm Bar Rendezvényen</a></li>
+        <li><a href="#esemenyek">Események</a></li>
+        <li><a href="#kapcsolat">Kapcsolat</a></li>
+      </ul>
+      <button class="hamburger-btn" onclick="openMobileMenu()">
+        <i class="bi bi-list"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu-overlay" id="mobileMenu">
+    <!-- Left side: Logo & categories -->
+    <div class="mobile-menu-left">
+      <img src="../pics/menu_vector_icons/10_izi_logo.png" alt="IziÉkszer" class="menu-logo">
+      <span class="menu-slogan">Ékszer Élmény</span>
+      <!-- Category icons -->
+      <div class="mobile-menu-categories">
+        <div class="cat-item">
+          <div class="cat-icon">
+            <img src="../pics/menu_vector_icons/05_Fülbelövés.png" alt="Fülbelövés">
+          </div>
+          Fülbelövés
+        </div>
+        <div class="cat-item">
+          <div class="cat-icon">
+            <img src="../pics/menu_vector_icons/06_Ékszer_Futár.png" alt="Ékszer Futár">
+          </div>
+          Ékszer Futár<br>Webshop
+        </div>
+        <div class="cat-item">
+          <div class="cat-icon">
+            <img src="../pics/menu_vector_icons/04_charm_bar_webshop.png" alt="Charm Bar">
+          </div>
+          Charm Bar
+        </div>
+      </div>
+    </div>
+    <!-- Right side: Menu items -->
+    <div class="mobile-menu-right">
+      <button class="mobile-menu-close" onclick="closeMobileMenu()">&times;</button>
+      <ul class="mobile-menu-items">
+        <li>
+          <a href="#Fülbelövés-otthon" onclick="closeMobileMenu()">
+            <img src="../pics/menu_vector_icons/01_Fülbelövés_otthon.png" alt="" class="menu-icon-img">
+            Fülbelövés Otthon
+          </a>
+          <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span class="sep-line"></span></div>
+        </li>
+        <li>
+          <a href="#Fülbelövés-rendezveny" onclick="closeMobileMenu()">
+            <img src="../pics/menu_vector_icons/02_Fülbelövés_Rendezvényen.png" alt="" class="menu-icon-img">
+            Fülbelövés rendezvényen
+          </a>
+          <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span class="sep-line"></span></div>
+        </li>
+        <li>
+          <a href="#Ékszer-Futár" onclick="closeMobileMenu()">
+            <img src="../pics/menu_vector_icons/03_Ékszer_Futár.png" alt="" class="menu-icon-img">
+            Ékszer Futár Webshop
+          </a>
+          <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span class="sep-line"></span></div>
+        </li>
+        <li>
+          <a href="#charm-bar-shop" onclick="closeMobileMenu()">
+            <img src="../pics/menu_vector_icons/04_charm_bar_webshop.png" alt="" class="menu-icon-img">
+            Charm Bar Webshop
+          </a>
+          <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span class="sep-line"></span></div>
+        </li>
+        <li>
+          <a href="#charm-bar" onclick="closeMobileMenu()">
+            <img src="../pics/menu_vector_icons/04_charm_bar_webshop.png" alt="" class="menu-icon-img">
+            Charm Bar Rendezvényen
+          </a>
+          <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span class="sep-line"></span></div>
+        </li>
+        <li>
+          <a href="#esemenyek" onclick="closeMobileMenu()">
+            <img src="../pics/menu_vector_icons/07_esemenyek.png" alt="" class="menu-icon-img">
+            Események
+          </a>
+          <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span class="sep-line"></span></div>
+        </li>
+        <li>
+          <a href="#kapcsolat" onclick="closeMobileMenu()">
+            <img src="../pics/menu_vector_icons/08_kapcsolat.png" alt="" class="menu-icon-img">
+            Kapcsolat
+          </a>
+        </li>
+      </ul>
+      <img src="../pics/menu_vector_icons/11_heart_flourish.png" alt="" class="mobile-menu-flourish">
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <section id="hero" class="hero-section">
+    <div class="container">
+      <img src="../pics/main_logo_transparent.png" alt="IziÉkszer" class="hero-logo">
+      <div class="hero-icons">
+        <div class="hero-icon-item">
+          <img src="../pics/ear_holes_texted.png" alt="Fülbelövés">
+          <span class="hero-icon-label">Steril kapszulás fülbelövés</span>
+        </div>
+        <div class="hero-icon-item">
+          <img src="../pics/EkszerFutar_transparent.png" alt="Ékszer futár">
+          <span class="hero-icon-label">Arany, ezüst és orvosi fém ékszerek</span>
+        </div>
+        <div class="hero-icon-item">
+          <img src="../pics/MobilCharmBar_transparent.png" alt="Mobil charm bar">
+          <span class="hero-icon-label">Egyedi kézműves ékszerek személyre szabva</span>
+        </div>
+      </div>
+      <!-- <h1 class="hero-title">IziÉkszer</h1>
+      <p class="hero-subtitle">Ékszer Élmény</p> -->
+      <a href="#Ékszer-Futár" class="btn btn-gold mt-4">Fedezd fel</a>
+    </div>
+  </section>
+
+  <!-- Fülbelövés otthon -->
+  <section id="Fülbelövés-otthon" class="section-block">
+    <div class="container">
+      <h2 class="section-title">Fülbelövés Otthon</h2>
+      <div class="gold-divider"></div>
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <img src="../pics/18586.jpg" alt="Fülbelövés otthon" class="img-fluid rounded">
+        </div>
+        <div class="col-lg-6 mt-4 mt-lg-0">
+          <p class="section-text">
+            Kényelmesen, otthonodban végezzük el a fülbelövést professzionális eszközökkel.
+            Biztonságos, higiénikus es fájdalommentes eljárás.
+          </p>
+          <a href="#kapcsolat" class="btn btn-outline-gold mt-3">Időpontfoglalás</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fülbelövés Rendezvényen -->
+  <section id="Fülbelövés-rendezveny" class="section-block section-alt">
+    <div class="container">
+      <h2 class="section-title">Fülbelövés Rendezvényen</h2>
+      <div class="gold-divider"></div>
+      <div class="row align-items-center">
+        <div class="col-lg-6 order-lg-2">
+          <img src="../pics/18587.jpg" alt="Fülbelövés Rendezvényen" class="img-fluid rounded">
+        </div>
+        <div class="col-lg-6 order-lg-1 mt-4 mt-lg-0">
+          <p class="section-text">
+            Rendezvényen, bulikon, csapatépitőknel is elérhető a fülbelövés szolgáltatásunk.
+            Különleges élmény a vendégeknek!
+          </p>
+          <a href="#kapcsolat" class="btn btn-outline-gold mt-3">Érdeklődés</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ékszer Futár webshop -->
+  <section id="Ékszer-Futár" class="section-block">
+    <div class="container">
+      <h2 class="section-title">Ékszer Futár Webshop</h2>
+      <div class="gold-divider"></div>
+      <div class="row g-4">
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="card product-card">
+            <img src="../pics/18327.webp" class="card-img-top" alt="Termek">
+            <div class="card-body text-center">
+              <h6 class="card-title">Arany fülbevaló</h6>
+              <p class="price">12 500 Ft</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="card product-card">
+            <img src="../pics/18586.jpg" class="card-img-top" alt="Termek">
+            <div class="card-body text-center">
+              <h6 class="card-title">Ezust nyaklánc</h6>
+              <p class="price">8 900 Ft</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="card product-card">
+            <img src="../pics/18587.jpg" class="card-img-top" alt="Termek">
+            <div class="card-body text-center">
+              <h6 class="card-title">Kristály karkötő</h6>
+              <p class="price">6 200 Ft</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="card product-card">
+            <img src="../pics/5536.png" class="card-img-top" alt="Termek">
+            <div class="card-body text-center">
+              <h6 class="card-title">Gyöngy fülbevaló</h6>
+              <p class="price">4 500 Ft</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Charm Bar webshop -->
+  <section id="charm-bar-shop" class="section-block section-alt">
+    <div class="container">
+      <h2 class="section-title">Charm Bar Webshop</h2>
+      <div class="gold-divider"></div>
+      <div class="row g-4">
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="card product-card">
+            <img src="../pics/5537.png" class="card-img-top" alt="Charm">
+            <div class="card-body text-center">
+              <h6 class="card-title">Szív charm</h6>
+              <p class="price">2 500 Ft</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="card product-card">
+            <img src="../pics/14479.png" class="card-img-top" alt="Charm">
+            <div class="card-body text-center">
+              <h6 class="card-title">Csillag charm</h6>
+              <p class="price">2 800 Ft</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="card product-card">
+            <img src="../pics/17104.png" class="card-img-top" alt="Charm">
+            <div class="card-body text-center">
+              <h6 class="card-title">Hold charm</h6>
+              <p class="price">3 200 Ft</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="card product-card">
+            <img src="../pics/17277.png" class="card-img-top" alt="Charm">
+            <div class="card-body text-center">
+              <h6 class="card-title">Virág charm</h6>
+              <p class="price">2 900 Ft</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Charm Bar Rendezvényen -->
+  <section id="charm-bar" class="section-block">
+    <div class="container">
+      <h2 class="section-title">Charm Bar Rendezvényen</h2>
+      <div class="gold-divider"></div>
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <img src="../pics/18179.png" class="img-fluid rounded" alt="Charm Bar Rendezvényen">
+        </div>
+        <div class="col-lg-6 mt-4 mt-lg-0">
+          <p class="section-text">
+            Hozd el a Charm Bar élményt a rendezvényed vendégei számára!
+            Egyedi charm karkötők készítése helyszinen.
+          </p>
+          <a href="#kapcsolat" class="btn btn-outline-gold mt-3">Ajánlatkérés</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Esemenyek -->
+  <section id="esemenyek" class="section-block section-alt">
+    <div class="container">
+      <h2 class="section-title">Események</h2>
+      <div class="gold-divider"></div>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4">
+          <div class="card event-card">
+            <div class="card-body">
+              <h5 class="card-title"><i class="bi bi-calendar-event me-2" style="color: var(--color-gold)"></i>Vasarnapi Vasar</h5>
+              <p class="text-muted">2026. augusztus 3. - Budapest</p>
+              <p class="card-text">Talalkozhatsz velunk a Vasarnapi Vasaron! Fülbelövés es charm keszites helyszinen.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="card event-card">
+            <div class="card-body">
+              <h5 class="card-title"><i class="bi bi-calendar-event me-2" style="color: var(--color-gold)"></i>Ékszer Workshop</h5>
+              <p class="text-muted">2026. augusztus 15. - Online</p>
+              <p class="card-text">Tanulj meg egyedi Ékszereket kesziteni! Online workshop kezdoknek es haladoknak.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="card event-card">
+            <div class="card-body">
+              <h5 class="card-title"><i class="bi bi-calendar-event me-2" style="color: var(--color-gold)"></i>Pop-up Store</h5>
+              <p class="text-muted">2026. szeptember 1. - Debrecen</p>
+              <p class="card-text">Egy napra megnyitjuk pop-up boltunkat Debrecenben. Gyere es valogass!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Kapcsolat -->
+  <section id="kapcsolat" class="section-block">
+    <div class="container">
+      <h2 class="section-title">Kapcsolat</h2>
+      <div class="gold-divider"></div>
+      <div class="row">
+        <div class="col-lg-6">
+          <form id="contactForm">
+            <div class="mb-3">
+              <label for="name" class="form-label">Nev</label>
+              <input type="text" class="form-control" id="name" required>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="mb-3">
+              <label for="subject" class="form-label">Targy</label>
+              <select class="form-select" id="subject">
+                <option selected>Valassz temat...</option>
+                <option>Fülbelövés otthon</option>
+                <option>Fülbelövés Rendezvényen</option>
+                <option>Charm Bar Rendezvényen</option>
+                <option>Webshop kerdes</option>
+                <option>Egyeb</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="message" class="form-label">Uzenet</label>
+              <textarea class="form-control" id="message" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-gold">Kuldes</button>
+          </form>
+        </div>
+        <div class="col-lg-5 offset-lg-1 mt-4 mt-lg-0">
+          <div class="contact-info">
+            <p><i class="bi bi-envelope me-2"></i>info@iziÉkszer.hu</p>
+            <p><i class="bi bi-phone me-2"></i>+36 30 123 4567</p>
+            <p><i class="bi bi-instagram me-2"></i>@iziÉkszer</p>
+            <p><i class="bi bi-facebook me-2"></i>IziÉkszer</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer text-center">
+    <div class="container">
+      <img src="../pics/main_logo_transparent.png" alt="IziÉkszer" height="30" class="mb-2">
+      <p class="mb-0">&copy; 2026 IziÉkszer - Minden jog fenntartva</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

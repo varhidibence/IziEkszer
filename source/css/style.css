@@ -1,0 +1,567 @@
+/* === Variables === */
+:root {
+  --bg-main: #F8ECE8;
+  --color-primary: #000000;
+  --color-gold: #c9a96e;
+  --color-gold-dark: #b8944f;
+  --color-gold-light: #d4b87a;
+  --bg-main-end: #d6af95;
+  --bg-menu: #f2e0da;
+  --color-menu-text: #000000;
+  --color-text-muted: #666;
+  --menu-logo-width: 150px;
+}
+
+/* === Base === */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-main-end) 100%);
+  background-attachment: fixed;
+  color: var(--color-primary);
+  margin: 0;
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* === Navbar Desktop === */
+.navbar-desktop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background-color: var(--bg-menu);
+  border-bottom: none;
+  background-image: linear-gradient(to right, transparent, var(--color-gold));
+  background-size: 100% 1px;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  padding: 10px 0;
+  transition: box-shadow 0.3s;
+  overflow: visible;
+}
+
+.navbar-desktop .nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar-desktop .nav-logo {
+  position: relative;
+  z-index: 200;
+  width: var(--menu-logo-width);
+  flex-shrink: 0;
+  margin-left: -40px;
+}
+
+.navbar-desktop .nav-logo img {
+  height: var(--menu-logo-width);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-25%);
+}
+
+.navbar-desktop .nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-desktop .nav-links li {
+  position: relative;
+}
+
+.navbar-desktop .nav-links a {
+  color: var(--color-menu-text);
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  padding: 8px 14px;
+  transition: color 0.3s;
+  display: block;
+}
+
+.navbar-desktop .nav-links a:hover {
+  color: var(--color-gold);
+}
+
+/* Heart separator between desktop nav items */
+.navbar-desktop .nav-links li::before {
+  content: '\2661';
+  color: var(--color-gold);
+  font-size: 1.5rem;
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Hamburger button */
+.hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: var(--color-gold);
+  font-size: 1.5rem;
+}
+
+/* === Mobile Menu Overlay === */
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  background-color: var(--bg-main);
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s, visibility 0.4s;
+}
+
+.mobile-menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Left side - logo */
+.mobile-menu-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  position: relative;
+}
+
+.mobile-menu-left .menu-logo {
+  width: 200px;
+  height: auto;
+  margin-bottom: 16px;
+}
+
+.mobile-menu-left .menu-slogan {
+  font-size: 0.85rem;
+  letter-spacing: 4px;
+  color: var(--color-primary);
+  text-transform: uppercase;
+}
+
+/* Category icons row at bottom of left side */
+.mobile-menu-categories {
+  position: absolute;
+  bottom: 40px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.mobile-menu-categories .cat-item {
+  text-align: center;
+  color: var(--color-gold-dark);
+  font-size: 0.7rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.mobile-menu-categories .cat-icon {
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 8px;
+}
+
+.mobile-menu-categories .cat-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Right side - menu items */
+.mobile-menu-right {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 30px;
+  position: relative;
+}
+
+.mobile-menu-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: var(--color-gold);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.mobile-menu-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.mobile-menu-items li {
+  position: relative;
+}
+
+.mobile-menu-items a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 5px;
+  color: var(--color-primary);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: color 0.3s;
+}
+
+.mobile-menu-items a:hover {
+  color: var(--color-gold);
+}
+
+.mobile-menu-items .menu-icon-img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* Line with heart separator between menu items */
+.mobile-menu-items li .menu-separator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 5px;
+}
+
+.mobile-menu-items li .menu-separator .sep-line {
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-gold);
+}
+
+.mobile-menu-items li .menu-separator .sep-heart {
+  color: var(--color-gold);
+  font-size: 0.65rem;
+  line-height: 1;
+}
+
+/* Heart flourish at bottom of menu */
+.mobile-menu-flourish {
+  width: 140px;
+  height: auto;
+  margin-top: 16px;
+  opacity: 0.8;
+}
+
+/* === Hero === */
+.hero-section {
+  padding: 140px 0 80px;
+  text-align: center;
+}
+
+.hero-logo {
+  width: 300px;
+  height: auto;
+  margin-bottom: 0px;
+  transition: transform 0.4s ease;
+}
+
+.hero-logo:hover {
+  transform: scale(1.15);
+}
+
+.hero-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 20px;
+}
+
+.hero-icon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-icon-item img {
+  height: 300px;
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.4s ease;
+}
+
+.hero-icon-item:hover img {
+  transform: scale(1.15);
+}
+
+.hero-icon-label {
+  margin-top: 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: var(--color-gold);
+  text-transform: uppercase;
+  max-width: 220px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 300;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: var(--color-gold);
+  letter-spacing: 3px;
+  margin-top: 8px;
+}
+
+/* === Buttons === */
+.btn-gold {
+  background-color: var(--color-gold);
+  color: #fff;
+  border: none;
+  padding: 10px 32px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: background-color 0.3s;
+  border-radius: 4px;
+}
+
+.btn-gold:hover {
+  background-color: var(--color-gold-dark);
+  color: #fff;
+}
+
+.btn-outline-gold {
+  background-color: transparent;
+  color: var(--color-gold);
+  border: 1px solid var(--color-gold);
+  padding: 10px 32px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.3s;
+  border-radius: 4px;
+}
+
+.btn-outline-gold:hover {
+  background-color: var(--color-gold);
+  color: #fff;
+}
+
+/* === Sections === */
+.section-block {
+  padding: 80px 0;
+}
+
+.section-alt {
+  background-color: rgba(201, 169, 110, 0.06);
+}
+
+.section-title {
+  font-weight: 300;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.section-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--color-text-muted);
+}
+
+/* Gold divider */
+.gold-divider {
+  width: 60px;
+  height: 1px;
+  background-color: var(--color-gold);
+  margin: 0 auto 40px;
+}
+
+/* === Product Cards === */
+.product-card {
+  border: none;
+  background-color: #fff;
+  transition: transform 0.3s, box-shadow 0.3s;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.product-card .card-img-top {
+  height: 220px;
+  object-fit: cover;
+}
+
+.product-card .card-title {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.price {
+  color: var(--color-gold);
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 0;
+}
+
+/* === Event Cards === */
+.event-card {
+  border: none;
+  background-color: #fff;
+  border-left: 3px solid var(--color-gold);
+  border-radius: 0 8px 8px 0;
+  transition: transform 0.3s;
+}
+
+.event-card:hover {
+  transform: translateY(-3px);
+}
+
+.event-card .card-title {
+  color: var(--color-primary);
+}
+
+.event-card .card-text {
+  color: var(--color-text-muted);
+}
+
+/* === Contact === */
+.form-control,
+.form-select {
+  border: 1px solid #ddd;
+  padding: 10px 14px;
+  color: #333;
+  background-color: #fff;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 0.2rem rgba(201, 169, 110, 0.25);
+}
+
+.form-label {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.contact-info {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--color-gold);
+}
+
+.contact-info p {
+  margin-bottom: 15px;
+  font-size: 1.05rem;
+  color: var(--color-primary);
+}
+
+.contact-info i {
+  color: var(--color-gold);
+}
+
+/* === Footer === */
+.site-footer {
+  background-color: var(--bg-main);
+  border-top: 1px solid var(--color-gold);
+  color: var(--color-text-muted);
+  padding: 24px 0;
+}
+
+/* === Responsive === */
+@media (max-width: 991px) {
+  .navbar-desktop .nav-links {
+    display: none;
+  }
+
+  .hamburger-btn {
+    display: block;
+  }
+}
+
+@media (max-width: 576px) {
+  .mobile-menu-left {
+    display: none;
+  }
+
+  .mobile-menu-right {
+    width: 100%;
+  }
+
+  .hero-title {
+    font-size: 2.2rem;
+    letter-spacing: 3px;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .hero-section {
+    padding: 120px 0 60px;
+  }
+
+  .section-block {
+    padding: 50px 0;
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+  }
+
+  .hero-icons {
+    flex-direction: column;
+  }
+
+  .hero-icon-item img {
+    height: 200px;
+  }
+}
