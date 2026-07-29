@@ -1,3 +1,13 @@
+// Nav layout: 'top' or 'sidebar'
+// Change this variable to switch navbar position
+var NAV_LAYOUT = 'top';
+
+(function () {
+  if (NAV_LAYOUT === 'sidebar') {
+    document.body.classList.add('nav-sidebar-mode');
+  }
+})();
+
 // Mobile menu open/close
 function openMobileMenu() {
   document.getElementById('mobileMenu').classList.add('active');

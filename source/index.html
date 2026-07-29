@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="hu">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
 </head>
+
 <body>
 
   <!-- Desktop Navbar -->
@@ -17,14 +19,43 @@
         <img src="../pics/main_logo_transparent.png" alt="IziÉkszer">
       </a>
       <ul class="nav-links">
-        <li><a href="#Fülbelövés-otthon">Fülbelövés Otthon</a></li>
-        <li><a href="#Fülbelövés-rendezveny">Fülbelövés Rendezvényen</a></li>
-        <li><a href="#Ékszer-Futár">Ékszer Futár Webshop</a></li>
-        <li><a href="#charm-bar-shop">Charm Bar Webshop</a></li>
-        <li><a href="#charm-bar">Charm Bar Rendezvényen</a></li>
-        <li><a href="#esemenyek">Események</a></li>
-        <li><a href="#kapcsolat">Kapcsolat</a></li>
+        <li><a href="#Fülbelövés-otthon"><img src="../pics/menu_vector_icons/01_fulbeloves_otthon.png" alt=""
+              class="nav-link-icon">Fülbelövés Otthon</a></li>
+        <li>
+          <div class="nav-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span
+              class="sep-line"></span></div><a href="#Fülbelövés-rendezveny"><img
+              src="../pics/menu_vector_icons/02_fulbeloves_rendezvenyen.png" alt="" class="nav-link-icon">Fülbelövés
+            Rendezvényen</a>
+        </li>
+        <li>
+          <div class="nav-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span
+              class="sep-line"></span></div><a href="#Ékszer-Futár"><img
+              src="../pics/menu_vector_icons/03_ekszer_futar.png" alt="" class="nav-link-icon">Ékszer Futár Webshop</a>
+        </li>
+        <li>
+          <div class="nav-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span
+              class="sep-line"></span></div><a href="#charm-bar-shop"><img
+              src="../pics/menu_vector_icons/04_charm_bar_webshop.png" alt="" class="nav-link-icon">Charm Bar
+            Webshop</a>
+        </li>
+        <li>
+          <div class="nav-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span
+              class="sep-line"></span></div><a href="#charm-bar"><img
+              src="../pics/menu_vector_icons/04_charm_bar_webshop.png" alt="" class="nav-link-icon">Charm Bar
+            Rendezvényen</a>
+        </li>
+        <li>
+          <div class="nav-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span
+              class="sep-line"></span></div><a href="#esemenyek"><img src="../pics/menu_vector_icons/07_esemenyek.png"
+              alt="" class="nav-link-icon">Események</a>
+        </li>
+        <li>
+          <div class="nav-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span
+              class="sep-line"></span></div><a href="#kapcsolat"><img src="../pics/menu_vector_icons/08_kapcsolat.png"
+              alt="" class="nav-link-icon">Kapcsolat</a>
+        </li>
       </ul>
+      <img src="../pics/menu_vector_icons/11_heart_flourish.png" alt="" class="nav-flourish">
       <button class="hamburger-btn" onclick="openMobileMenu()">
         <i class="bi bi-list"></i>
       </button>
@@ -33,87 +64,64 @@
 
   <!-- Mobile Menu Overlay -->
   <div class="mobile-menu-overlay" id="mobileMenu">
-    <!-- Left side: Logo & categories -->
-    <div class="mobile-menu-left">
+    <button class="mobile-menu-close" onclick="closeMobileMenu()">&times;</button>
+    <!-- Logo centered at top -->
+    <div class="mobile-menu-header">
       <img src="../pics/menu_vector_icons/10_izi_logo.png" alt="IziÉkszer" class="menu-logo">
       <span class="menu-slogan">Ékszer Élmény</span>
-      <!-- Category icons -->
-      <div class="mobile-menu-categories">
-        <div class="cat-item">
-          <div class="cat-icon">
-            <img src="../pics/menu_vector_icons/05_Fülbelövés.png" alt="Fülbelövés">
-          </div>
-          Fülbelövés
-        </div>
-        <div class="cat-item">
-          <div class="cat-icon">
-            <img src="../pics/menu_vector_icons/06_Ékszer_Futár.png" alt="Ékszer Futár">
-          </div>
-          Ékszer Futár<br>Webshop
-        </div>
-        <div class="cat-item">
-          <div class="cat-icon">
-            <img src="../pics/menu_vector_icons/04_charm_bar_webshop.png" alt="Charm Bar">
-          </div>
-          Charm Bar
-        </div>
-      </div>
     </div>
-    <!-- Right side: Menu items -->
-    <div class="mobile-menu-right">
-      <button class="mobile-menu-close" onclick="closeMobileMenu()">&times;</button>
-      <ul class="mobile-menu-items">
-        <li>
-          <a href="#Fülbelövés-otthon" onclick="closeMobileMenu()">
-            <img src="../pics/menu_vector_icons/01_Fülbelövés_otthon.png" alt="" class="menu-icon-img">
-            Fülbelövés Otthon
-          </a>
-          <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span class="sep-line"></span></div>
-        </li>
-        <li>
-          <a href="#Fülbelövés-rendezveny" onclick="closeMobileMenu()">
-            <img src="../pics/menu_vector_icons/02_Fülbelövés_Rendezvényen.png" alt="" class="menu-icon-img">
-            Fülbelövés rendezvényen
-          </a>
-          <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span class="sep-line"></span></div>
-        </li>
-        <li>
-          <a href="#Ékszer-Futár" onclick="closeMobileMenu()">
-            <img src="../pics/menu_vector_icons/03_Ékszer_Futár.png" alt="" class="menu-icon-img">
-            Ékszer Futár Webshop
-          </a>
-          <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span class="sep-line"></span></div>
-        </li>
-        <li>
-          <a href="#charm-bar-shop" onclick="closeMobileMenu()">
-            <img src="../pics/menu_vector_icons/04_charm_bar_webshop.png" alt="" class="menu-icon-img">
-            Charm Bar Webshop
-          </a>
-          <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span class="sep-line"></span></div>
-        </li>
-        <li>
-          <a href="#charm-bar" onclick="closeMobileMenu()">
-            <img src="../pics/menu_vector_icons/04_charm_bar_webshop.png" alt="" class="menu-icon-img">
-            Charm Bar Rendezvényen
-          </a>
-          <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span class="sep-line"></span></div>
-        </li>
-        <li>
-          <a href="#esemenyek" onclick="closeMobileMenu()">
-            <img src="../pics/menu_vector_icons/07_esemenyek.png" alt="" class="menu-icon-img">
-            Események
-          </a>
-          <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span class="sep-line"></span></div>
-        </li>
-        <li>
-          <a href="#kapcsolat" onclick="closeMobileMenu()">
-            <img src="../pics/menu_vector_icons/08_kapcsolat.png" alt="" class="menu-icon-img">
-            Kapcsolat
-          </a>
-        </li>
-      </ul>
-      <img src="../pics/menu_vector_icons/11_heart_flourish.png" alt="" class="mobile-menu-flourish">
-    </div>
+    <!-- Menu items with icons -->
+    <ul class="mobile-menu-items">
+      <li>
+        <a href="#Fülbelövés-otthon" onclick="closeMobileMenu()">
+          <img src="../pics/menu_vector_icons/01_fulbeloves_otthon.png" alt="" class="menu-icon-img">
+          Fülbelövés Otthon
+        </a>
+        <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span class="sep-line"></span></div>
+      </li>
+      <li>
+        <a href="#Fülbelövés-rendezveny" onclick="closeMobileMenu()">
+          <img src="../pics/menu_vector_icons/02_fulbeloves_rendezvenyen.png" alt="" class="menu-icon-img">
+          Fülbelövés rendezvényen
+        </a>
+        <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span class="sep-line"></span></div>
+      </li>
+      <li>
+        <a href="#Ékszer-Futár" onclick="closeMobileMenu()">
+          <img src="../pics/menu_vector_icons/03_ekszer_futar.png" alt="" class="menu-icon-img">
+          Ékszer Futár Webshop
+        </a>
+        <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span class="sep-line"></span></div>
+      </li>
+      <li>
+        <a href="#charm-bar-shop" onclick="closeMobileMenu()">
+          <img src="../pics/menu_vector_icons/04_charm_bar_webshop.png" alt="" class="menu-icon-img">
+          Charm Bar Webshop
+        </a>
+        <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span class="sep-line"></span></div>
+      </li>
+      <li>
+        <a href="#charm-bar" onclick="closeMobileMenu()">
+          <img src="../pics/menu_vector_icons/04_charm_bar_webshop.png" alt="" class="menu-icon-img">
+          Charm Bar Rendezvényen
+        </a>
+        <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span class="sep-line"></span></div>
+      </li>
+      <li>
+        <a href="#esemenyek" onclick="closeMobileMenu()">
+          <img src="../pics/menu_vector_icons/07_esemenyek.png" alt="" class="menu-icon-img">
+          Események
+        </a>
+        <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span class="sep-line"></span></div>
+      </li>
+      <li>
+        <a href="#kapcsolat" onclick="closeMobileMenu()">
+          <img src="../pics/menu_vector_icons/08_kapcsolat.png" alt="" class="menu-icon-img">
+          Kapcsolat
+        </a>
+      </li>
+    </ul>
+    <img src="../pics/menu_vector_icons/11_heart_flourish.png" alt="" class="mobile-menu-flourish">
   </div>
 
   <!-- Hero Section -->
@@ -301,16 +309,19 @@
         <div class="col-md-6 col-lg-4">
           <div class="card event-card">
             <div class="card-body">
-              <h5 class="card-title"><i class="bi bi-calendar-event me-2" style="color: var(--color-gold)"></i>Vasarnapi Vasar</h5>
+              <h5 class="card-title"><i class="bi bi-calendar-event me-2" style="color: var(--color-gold)"></i>Vasarnapi
+                Vasar</h5>
               <p class="text-muted">2026. augusztus 3. - Budapest</p>
-              <p class="card-text">Talalkozhatsz velunk a Vasarnapi Vasaron! Fülbelövés es charm keszites helyszinen.</p>
+              <p class="card-text">Talalkozhatsz velunk a Vasarnapi Vasaron! Fülbelövés es charm keszites helyszinen.
+              </p>
             </div>
           </div>
         </div>
         <div class="col-md-6 col-lg-4">
           <div class="card event-card">
             <div class="card-body">
-              <h5 class="card-title"><i class="bi bi-calendar-event me-2" style="color: var(--color-gold)"></i>Ékszer Workshop</h5>
+              <h5 class="card-title"><i class="bi bi-calendar-event me-2" style="color: var(--color-gold)"></i>Ékszer
+                Workshop</h5>
               <p class="text-muted">2026. augusztus 15. - Online</p>
               <p class="card-text">Tanulj meg egyedi Ékszereket kesziteni! Online workshop kezdoknek es haladoknak.</p>
             </div>
@@ -319,7 +330,8 @@
         <div class="col-md-6 col-lg-4">
           <div class="card event-card">
             <div class="card-body">
-              <h5 class="card-title"><i class="bi bi-calendar-event me-2" style="color: var(--color-gold)"></i>Pop-up Store</h5>
+              <h5 class="card-title"><i class="bi bi-calendar-event me-2" style="color: var(--color-gold)"></i>Pop-up
+                Store</h5>
               <p class="text-muted">2026. szeptember 1. - Debrecen</p>
               <p class="card-text">Egy napra megnyitjuk pop-up boltunkat Debrecenben. Gyere es valogass!</p>
             </div>
@@ -386,4 +398,5 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/main.js"></script>
 </body>
+
 </html>
