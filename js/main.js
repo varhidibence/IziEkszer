@@ -1,6 +1,6 @@
 // Nav layout: 'top' or 'sidebar'
 // Change this variable to switch navbar position
-var NAV_LAYOUT = 'top';
+var NAV_LAYOUT = 'sidebar';
 
 (function () {
   if (NAV_LAYOUT === 'sidebar') {
