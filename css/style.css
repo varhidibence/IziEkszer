@@ -488,8 +488,9 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
   margin-top: 20px;
   font-size: 1rem;
   font-weight: 500;
+  font-family: 'Times New Roman', Times, serif;
   letter-spacing: 1px;
-  color: var(--color-gold);
+  color: var(--color-primary);
   text-transform: uppercase;
   max-width: 220px;
   text-align: center;
@@ -509,6 +510,313 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
   color: var(--color-gold);
   letter-spacing: 3px;
   margin-top: 8px;
+}
+
+/* === Fülbelövés Intro === */
+.fb-intro-img {
+  max-width: 350px;
+  width: 50%;
+  height: auto;
+  display: block;
+  margin: 0 auto 20px;
+}
+
+.fb-intro-text {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--color-primary);
+  padding-left: 10px;
+}
+
+.fb-intro-photo {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 0;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  -webkit-mask-composite: destination-in;
+  mask-image:
+    linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  mask-composite: intersect;
+}
+
+/* === Fülbelövés Section === */
+.fulbeloves-section {
+  background-color: var(--bg-main);
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.fb-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.fb-header-icon {
+  height: 120px;
+  width: auto;
+  object-fit: contain;
+}
+
+.fb-header-center {
+  text-align: center;
+}
+
+.fb-title {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 6px;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.fb-subtitle {
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+  color: var(--color-primary);
+  margin: 5px 0 0;
+}
+
+.fb-heart {
+  color: var(--color-gold);
+  font-size: 1.2rem;
+}
+
+/* Választék label */
+.fb-valasztek-label {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  max-width: 400px;
+  margin: 0 auto 25px;
+}
+
+.fb-label-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--color-gold));
+}
+
+.fb-label-line:last-child {
+  background: linear-gradient(to left, transparent, var(--color-gold));
+}
+
+.fb-label-text {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  color: var(--color-gold);
+  text-transform: uppercase;
+  border: 1px solid var(--color-gold);
+  padding: 4px 20px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* Earring grid */
+.fb-earring-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 12px;
+  max-width: 800px;
+  margin: 0 auto 30px;
+}
+
+.fb-earring-item {
+  text-align: center;
+}
+
+.fb-earring-num {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-gold);
+  margin-bottom: 4px;
+}
+
+.fb-earring-item img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  transition: transform 0.3s;
+}
+
+.fb-earring-item:hover img {
+  transform: scale(1.15);
+}
+
+/* Feature badges */
+.fb-features {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 10px;
+}
+
+.fb-feature {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fb-feature img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.fb-feature span {
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: var(--color-primary);
+}
+
+.fb-baby-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 10px 0 25px;
+}
+
+.fb-baby-badge img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.fb-baby-badge span {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-gold);
+  letter-spacing: 1px;
+}
+
+/* Price box */
+.fb-price-box {
+  text-align: center;
+  border: 2px solid var(--color-gold);
+  border-radius: 12px;
+  padding: 15px 30px;
+  max-width: 320px;
+  margin: 0 auto 25px;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.fb-price-label {
+  font-size: 1rem;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.fb-price {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-gold);
+  margin: 0;
+}
+
+/* Includes box */
+.fb-includes {
+  max-width: 550px;
+  margin: 0 auto 10px;
+}
+
+.fb-includes-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--color-gold);
+  border-radius: 10px;
+  padding: 15px 20px;
+}
+
+.fb-check-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.fb-delivery-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.fb-includes-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0 0 4px;
+  letter-spacing: 0.5px;
+}
+
+.fb-includes-text {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.fb-includes-list {
+  list-style: disc;
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+/* Fülbelövés responsive */
+@media (max-width: 576px) {
+  .fb-title {
+    font-size: 2rem;
+    letter-spacing: 3px;
+  }
+
+  .fb-header-icon {
+    height: 70px;
+  }
+
+  .fb-header {
+    gap: 15px;
+  }
+
+  .fb-earring-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  .fb-earring-item img {
+    width: 55px;
+    height: 55px;
+  }
+
+  .fb-features {
+    gap: 12px;
+  }
+
+  .fb-feature span {
+    font-size: 0.75rem;
+  }
+
+  .fb-price {
+    font-size: 2rem;
+  }
 }
 
 /* === Buttons === */
