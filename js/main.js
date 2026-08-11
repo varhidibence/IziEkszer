@@ -33,5 +33,33 @@ window.addEventListener('scroll', function () {
 document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') {
     closeMobileMenu();
+    closeEarringModal();
   }
 });
+
+// Earring lightbox
+var earringModal = document.getElementById('earringModal');
+var earringModalImg = earringModal.querySelector('.earring-modal-img');
+var earringModalNum = earringModal.querySelector('.earring-modal-num');
+
+document.querySelectorAll('.fb-earring-item').forEach(function (item) {
+  item.addEventListener('click', function () {
+    var img = item.querySelector('img');
+    var num = item.querySelector('.fb-earring-num');
+    earringModalImg.src = img.src;
+    earringModalImg.alt = img.alt;
+    earringModalNum.textContent = num ? num.textContent : '';
+    earringModal.classList.add('active');
+    earringModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  });
+});
+
+earringModal.querySelector('.earring-modal-close').addEventListener('click', closeEarringModal);
+earringModal.querySelector('.earring-modal-backdrop').addEventListener('click', closeEarringModal);
+
+function closeEarringModal() {
+  earringModal.classList.remove('active');
+  earringModal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}

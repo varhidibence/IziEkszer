@@ -630,6 +630,7 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 
 .fb-earring-item {
   text-align: center;
+  cursor: pointer;
 }
 
 .fb-earring-num {
@@ -1033,4 +1034,69 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
   .hero-icon-item img {
     height: 200px;
   }
+}
+
+/* === Earring lightbox modal === */
+.earring-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+
+.earring-modal.active {
+  display: flex;
+}
+
+.earring-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.earring-modal-content {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--color-gold, #c9a96e);
+  border-radius: 8px;
+  padding: 32px 40px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+.earring-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: none;
+  border: none;
+  color: var(--color-gold, #c9a96e);
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.earring-modal-close:hover {
+  color: #fff;
+}
+
+.earring-modal-num {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-gold, #c9a96e);
+  letter-spacing: 1px;
+}
+
+.earring-modal-img {
+  width: min(340px, 80vw);
+  height: min(340px, 80vw);
+  object-fit: contain;
 }
