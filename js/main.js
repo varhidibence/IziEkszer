@@ -42,16 +42,36 @@ var earringModal = document.getElementById('earringModal');
 var earringModalImg = earringModal.querySelector('.earring-modal-img');
 var earringModalNum = earringModal.querySelector('.earring-modal-num');
 
+function openEarringModal(imgSrc, imgAlt, label) {
+  earringModalImg.src = imgSrc;
+  earringModalImg.alt = imgAlt;
+  earringModalNum.textContent = label;
+  earringModal.classList.add('active');
+  earringModal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
 document.querySelectorAll('.fb-earring-item').forEach(function (item) {
   item.addEventListener('click', function () {
     var img = item.querySelector('img');
     var num = item.querySelector('.fb-earring-num');
-    earringModalImg.src = img.src;
-    earringModalImg.alt = img.alt;
-    earringModalNum.textContent = num ? num.textContent : '';
-    earringModal.classList.add('active');
-    earringModal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
+    openEarringModal(img.src, img.alt, num ? num.textContent : '');
+  });
+});
+
+document.querySelectorAll('.fb-shape-item').forEach(function (item) {
+  item.addEventListener('click', function () {
+    var img = item.querySelector('img');
+    var label = item.querySelector('span');
+    openEarringModal(img.src, img.alt, label ? label.textContent : '');
+  });
+});
+
+document.querySelectorAll('.fb-uj-item').forEach(function (item) {
+  item.addEventListener('click', function () {
+    var img = item.querySelector('img');
+    var label = item.querySelector('span');
+    openEarringModal(img.src, img.alt, label ? label.textContent : '');
   });
 });
 
