@@ -83,3 +83,46 @@ function closeEarringModal() {
   earringModal.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
 }
+
+// Események szétválasztása közelgő / korábbi alapján
+const esemenyek = [
+  { cim: "Esztergomi Szent István Napok", helyszin: "Esztergom",             datum: "2026-08-23" },
+  { cim: "Tinnyei Falunap",              helyszin: "Tinnye",                 datum: "2026-08-20" },
+  { cim: "Fülbelövés Nap",               helyszin: "Tát és környéke",        datum: "2026-08-06" },
+  { cim: "Fülbelövés Nap",               helyszin: "Pilisjászfalu és környéke", datum: "2026-08-04" },
+  { cim: "Fülbelövés Nap",               helyszin: "Esztergom",              datum: "2026-07-30" },
+  { cim: "Fülbelövés Nap",               helyszin: "Dorog",                  datum: "2026-07-23" },
+];
+
+function esemenyKartya(e, isPast) {
+  const d = new Date(e.datum);
+  const honap = d.toLocaleDateString("hu-HU", { month: "short" });
+  const nap = d.getDate();
+  return `
+    <div class="col-md-6 col-lg-4">
+      <div class="card event-card${isPast ? ' korabbi' : ''}">
+        <div class="card-body">
+          <h5 class="card-title"><i class="bi bi-calendar-event me-2" style="color: var(--color-gold)"></i>${e.cim}</h5>
+          <p class="text-muted">${nap}. ${honap} – ${e.helyszin}</p>
+        </div>
+      </div>
+    </div>`;
+}
+
+(function () {
+  const ma = new Date();
+  ma.setHours(0, 0, 0, 0);
+
+  const kozelgo = esemenyek.filter(e => new Date(e.datum) >= ma);
+  const korabbi = esemenyek.filter(e => new Date(e.datum) < ma);
+
+  let html = "";
+  if (kozelgo.length) {
+    html += `<h5 class="mt-3 mb-3 text-muted">Közelgő</h5><div class="row g-4">${kozelgo.map(e => esemenyKartya(e, false)).join("")}</div>`;
+  }
+  if (korabbi.length) {
+    html += `<h5 class="mt-4 mb-3 text-muted">Korábbi</h5><div class="row g-4">${korabbi.map(e => esemenyKartya(e, true)).join("")}</div>`;
+  }
+
+  document.getElementById("esemenyek-container").innerHTML = html;
+})();
