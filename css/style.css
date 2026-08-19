@@ -401,7 +401,8 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
     right: 0;
     bottom: auto;
     width: 100%;
-    padding: 10px 0;
+    padding: 0;
+    height: 56px;
     background-image: linear-gradient(to right, transparent, var(--color-gold));
     background-size: 100% 1px;
     background-position: bottom;
@@ -409,20 +410,23 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 
   body.nav-sidebar-mode .navbar-desktop .nav-container {
     flex-direction: row;
-    height: auto;
+    height: 56px;
+    align-items: center;
   }
 
   body.nav-sidebar-mode .navbar-desktop .nav-logo {
     margin-bottom: 0;
-    margin-left: -40px;
-    width: var(--menu-logo-width);
+    margin-left: 0;
+    width: auto;
+    height: 56px;
   }
 
   body.nav-sidebar-mode .navbar-desktop .nav-logo img {
-    position: absolute;
-    height: var(--menu-logo-width);
-    top: 50%;
-    transform: translateY(-25%);
+    position: static;
+    height: 56px;
+    width: auto;
+    transform: none;
+    top: auto;
   }
 
   body.nav-sidebar-mode .navbar-desktop .nav-links {
@@ -807,6 +811,15 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
   margin-bottom: 12px;
 }
 
+.fb-box-title--gold-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #f5d48a, #c8963e, #f5d48a);
+  color: #000;
+  border-radius: 30px;
+  padding: 6px 24px;
+  margin-bottom: 16px;
+}
+
 .fb-box-title-sub {
   font-size: 1rem;
   font-weight: 400;
@@ -1092,6 +1105,12 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
   color: var(--color-text-muted);
 }
 
+.event-card.korabbi {
+  opacity: 0.5;
+  filter: grayscale(60%);
+  border-left-color: #aaa;
+}
+
 /* === Contact === */
 .form-control,
 .form-select {
@@ -1145,16 +1164,27 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 
   .hamburger-btn {
     display: block;
+    margin-left: auto;
+  }
+
+  .navbar-desktop {
+    padding: 0;
+    height: 56px;
   }
 
   .navbar-desktop .nav-logo {
-    width: calc(var(--menu-logo-width) * 0.6);
-    left: 15px;
-    top: -10px;
+    width: auto;
+    height: 56px;
+    margin-left: 0;
+    flex-shrink: 0;
   }
 
   .navbar-desktop .nav-logo img {
-    height: calc(var(--menu-logo-width) * 0.6);
+    position: static;
+    height: 56px;
+    width: auto;
+    transform: none;
+    top: auto;
   }
 }
 
