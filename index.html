@@ -275,7 +275,7 @@
 
         <!-- Választható kövek -->
         <div class="fb-uv-box">
-          <h3 class="fb-box-title">VÁLASZTHATÓ KÖVEK</h3>
+          <h3 class="fb-box-title fb-box-title--gold-badge">VÁLASZTHATÓ KÖVEK</h3>
           <p class="fb-stone-cat-label">EZÜST SZÍNŰ KÖVEK</p>
           <img src="pics/fulbeloves/silver_stones.png" alt="Ezüst kövek" class="fb-stones-img">
           <p class="fb-stone-cat-label mt-2">ARANY SZÍNŰ KÖVEK</p>
@@ -588,39 +588,7 @@
     <div class="container">
       <h2 class="section-title">Események</h2>
       <div class="gold-divider"></div>
-      <div class="row g-4">
-        <div class="col-md-6 col-lg-4">
-          <div class="card event-card">
-            <div class="card-body">
-              <h5 class="card-title"><i class="bi bi-calendar-event me-2" style="color: var(--color-gold)"></i>Vasarnapi
-                Vasar</h5>
-              <p class="text-muted">2026. augusztus 3. - Budapest</p>
-              <p class="card-text">Talalkozhatsz velunk a Vasarnapi Vasaron! Fülbelövés es charm keszites helyszinen.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6 col-lg-4">
-          <div class="card event-card">
-            <div class="card-body">
-              <h5 class="card-title"><i class="bi bi-calendar-event me-2" style="color: var(--color-gold)"></i>Ékszer
-                Workshop</h5>
-              <p class="text-muted">2026. augusztus 15. - Online</p>
-              <p class="card-text">Tanulj meg egyedi Ékszereket kesziteni! Online workshop kezdoknek es haladoknak.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6 col-lg-4">
-          <div class="card event-card">
-            <div class="card-body">
-              <h5 class="card-title"><i class="bi bi-calendar-event me-2" style="color: var(--color-gold)"></i>Pop-up
-                Store</h5>
-              <p class="text-muted">2026. szeptember 1. - Debrecen</p>
-              <p class="card-text">Egy napra megnyitjuk pop-up boltunkat Debrecenben. Gyere es valogass!</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div id="esemenyek-container"></div>
     </div>
   </section>
 
@@ -633,7 +601,7 @@
         <div class="col-lg-6">
           <form id="contactForm">
             <div class="mb-3">
-              <label for="name" class="form-label">Nev</label>
+              <label for="name" class="form-label">Név</label>
               <input type="text" class="form-control" id="name" required>
             </div>
             <div class="mb-3">
@@ -641,29 +609,29 @@
               <input type="email" class="form-control" id="email" required>
             </div>
             <div class="mb-3">
-              <label for="subject" class="form-label">Targy</label>
+              <label for="subject" class="form-label">Tárgy</label>
               <select class="form-select" id="subject">
-                <option selected>Valassz temat...</option>
+                <option selected>Válassz témát...</option>
                 <option>Fülbelövés otthon</option>
                 <option>Fülbelövés Rendezvényen</option>
                 <option>Charm Bar Rendezvényen</option>
-                <option>Webshop kerdes</option>
-                <option>Egyeb</option>
+                <option>Webshop kérdés</option>
+                <option>Egyéb</option>
               </select>
             </div>
             <div class="mb-3">
-              <label for="message" class="form-label">Uzenet</label>
+              <label for="message" class="form-label">Üzenet</label>
               <textarea class="form-control" id="message" rows="4" required></textarea>
             </div>
-            <button type="submit" class="btn btn-gold">Kuldes</button>
+            <button type="submit" class="btn btn-gold">Küldes</button>
           </form>
         </div>
         <div class="col-lg-5 offset-lg-1 mt-4 mt-lg-0">
           <div class="contact-info">
-            <p><i class="bi bi-envelope me-2"></i>info@iziÉkszer.hu</p>
-            <p><i class="bi bi-phone me-2"></i>+36 30 123 4567</p>
-            <p><i class="bi bi-instagram me-2"></i>@iziÉkszer</p>
-            <p><i class="bi bi-facebook me-2"></i>IziÉkszer</p>
+            <p><i class="bi bi-envelope me-2"></i>izabella.szlovak92@gmail.com</p>
+            <p><i class="bi bi-phone me-2"></i>+36 30 391 3634</p>
+            <p><a href="https://www.instagram.com/iziekszer" target="_blank" class="text-decoration-none text-reset"><i class="bi bi-instagram me-2"></i>@iziekszer</a></p>
+            <p><a href="https://www.facebook.com/iziekszer" target="_blank" class="text-decoration-none text-reset"><i class="bi bi-facebook me-2"></i>IziÉkszer</a></p>
           </div>
         </div>
       </div>
