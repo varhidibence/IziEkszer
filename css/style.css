@@ -532,11 +532,24 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
   padding-left: 10px;
 }
 
+.fb-intro-photo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.fb-intro-logo {
+  display: none;
+}
+
 .fb-intro-photo {
-  width: 100%;
+  width: 50%;
   max-width: 400px;
   height: auto;
   object-fit: cover;
+  display: block;
+  margin: 0 auto;
   border-radius: 0;
   -webkit-mask-image:
     linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%),
@@ -1211,11 +1224,29 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
   }
 
   .hero-icons {
-    flex-direction: column;
+    flex-direction: row;
+    gap: 2vw;
   }
 
   .hero-icon-item img {
-    height: 200px;
+    width: 28vw;
+    height: auto;
+  }
+
+  .hero-icon-label {
+    display: none;
+  }
+
+  .fb-intro-logo {
+    display: block;
+    width: 42vw;
+    height: auto;
+  }
+
+  .fb-intro-photo {
+    width: 42vw;
+    max-width: none;
+    margin: 0;
   }
 }
 
