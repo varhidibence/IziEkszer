@@ -13,6 +13,10 @@
 }
 
 /* === Base === */
+html {
+  overflow-x: hidden;
+}
+
 body {
   font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-main-end) 100%);
@@ -20,6 +24,7 @@ body {
   color: var(--color-primary);
   margin: 0;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 a {
@@ -480,6 +485,7 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 .hero-icon-item img {
   height: 300px;
   width: auto;
+  max-width: 28vw;
   object-fit: contain;
   transition: transform 0.4s ease;
 }
@@ -959,16 +965,16 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 
 @media (max-width: 576px) {
   .fb-title {
-    font-size: 2rem;
-    letter-spacing: 3px;
+    font-size: 1.3rem;
+    letter-spacing: 1px;
   }
 
   .fb-header-icon {
-    height: 70px;
+    height: 50px;
   }
 
   .fb-header {
-    gap: 15px;
+    gap: 10px;
   }
 
   .fb-earring-grid {
@@ -1037,6 +1043,7 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 /* === Sections === */
 .section-block {
   padding: 80px 0;
+  font-family: 'Times New Roman', Times, serif;
 }
 
 .section-alt {
@@ -1044,7 +1051,7 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 }
 
 .section-title {
-  font-weight: 300;
+  font-weight: 700;
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--color-primary);
@@ -1305,7 +1312,7 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 .earring-modal-num {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--color-gold, #c9a96e);
+  color: var(--color-primary, #c9a96e);
   letter-spacing: 1px;
 }
 
