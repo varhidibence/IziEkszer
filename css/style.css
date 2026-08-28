@@ -542,7 +542,7 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 .fb-intro-logo {
@@ -1254,6 +1254,10 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
     width: 42vw;
     max-width: none;
     margin: 0;
+  }
+
+  .fb-intro-photo-wrapper {
+    margin-bottom: 20px;
   }
 }
 
