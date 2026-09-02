@@ -86,6 +86,8 @@ function closeEarringModal() {
 
 // Események szétválasztása közelgő / korábbi alapján
 const esemenyek = [
+  { cim: "JászfaluNapok",                helyszin: "Pilisjászfalu",          datum: "2026-09-05" },
+  { cim: "Dorogi Bányásznapok",          helyszin: "Dorog, Otthon tér",      datum: "2026-09-04" },
   { cim: "Esztergomi Szent István Napok", helyszin: "Esztergom",             datum: "2026-08-23" },
   { cim: "Tinnyei Falunap",              helyszin: "Tinnye",                 datum: "2026-08-20" },
   { cim: "Fülbelövés Nap",               helyszin: "Tát és környéke",        datum: "2026-08-06" },
@@ -96,14 +98,16 @@ const esemenyek = [
 
 function esemenyKartya(e, isPast) {
   const d = new Date(e.datum);
-  const honap = d.toLocaleDateString("hu-HU", { month: "short" });
+  const honap = d.toLocaleDateString("hu-HU", { month: "long" });
+  const honapNagybetu = honap.charAt(0).toUpperCase() + honap.slice(1);
   const nap = d.getDate();
+  const napNeve = d.toLocaleDateString("hu-HU", { weekday: "long" });
   return `
     <div class="col-md-6 col-lg-4">
       <div class="card event-card${isPast ? ' korabbi' : ''}">
         <div class="card-body">
           <h5 class="card-title"><i class="bi bi-calendar-event me-2" style="color: var(--color-gold)"></i>${e.cim}</h5>
-          <p class="text-muted">${nap}. ${honap} – ${e.helyszin}</p>
+          <p class="text-muted">${honapNagybetu} ${nap}. ${napNeve} – ${e.helyszin}</p>
         </div>
       </div>
     </div>`;
