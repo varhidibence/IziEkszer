@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IziÉkszer Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #c9a96e;
+      --bg: #1a1a1a;
+      --bg-card: #242424;
+      --text: #e8d5b0;
+    }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; font-family: sans-serif; }
+    #login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .login-card { background: var(--bg-card); border: 1px solid var(--gold); border-radius: 1rem; padding: 2.5rem; text-align: center; min-width: 320px; }
+    .login-card h4 { color: var(--gold); }
+    .admin-header { background: var(--bg-card); border-bottom: 1px solid #333; padding: 0.9rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+    .admin-logo { color: var(--gold); font-weight: bold; font-size: 1.1rem; }
+    .btn-gold { background: var(--gold); color: #1a1a1a; border: none; font-weight: 500; }
+    .btn-gold:hover { background: #b8924d; color: #1a1a1a; }
+    .btn-outline-gold { border: 1px solid var(--gold); color: var(--gold); background: transparent; }
+    .btn-outline-gold:hover { background: var(--gold); color: #1a1a1a; }
+    .card { background: var(--bg-card); border: 1px solid #333; color: var(--text); }
+    .form-control, .form-select { background: #2a2a2a; border: 1px solid #444; color: var(--text); }
+    .form-control:focus, .form-select:focus { background: #2a2a2a; color: var(--text); border-color: var(--gold); box-shadow: 0 0 0 0.2rem rgba(201,169,110,0.2); }
+    .form-label { color: #aaa; font-size: 0.85rem; }
+    .nav-tabs { border-bottom: 1px solid #333; }
+    .nav-tabs .nav-link { color: #888; border: none; border-bottom: 2px solid transparent; padding: 0.5rem 1.2rem; }
+    .nav-tabs .nav-link.active { color: var(--gold); background: transparent; border-bottom-color: var(--gold); }
+    .nav-tabs .nav-link:hover { color: var(--text); border-color: transparent; }
+    table { color: var(--text); }
+    thead th { color: var(--gold); font-weight: 500; border-bottom: 1px solid #333; font-size: 0.85rem; }
+    tbody td { border-bottom: 1px solid #2a2a2a; vertical-align: middle; }
+    .badge-upcoming { background: rgba(201,169,110,0.15); color: var(--gold); padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; }
+    .badge-past { background: rgba(255,255,255,0.07); color: #777; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; }
+    .price-row { display: flex; align-items: center; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid #2a2a2a; }
+    .price-row:last-child { border-bottom: none; }
+    .price-label { flex: 1; font-size: 0.95rem; }
+    .price-input { width: 130px; text-align: right; }
+    #empty-state { color: #666; text-align: center; padding: 2rem; }
+  </style>
+</head>
+<body>
+
+<!-- Bejelentkezés -->
+<div id="login-screen">
+  <div class="login-card">
+    <img src="../pics/main_logo_transparent.png" alt="IziÉkszer" height="60" class="mb-3">
+    <h4 class="mb-1">Admin belépés</h4>
+    <p class="text-muted mb-4" style="font-size:0.9rem">Csak jogosult Google-fiókkal férhetsz hozzá.</p>
+    <button id="google-login-btn" class="btn btn-gold px-4">
+      <i class="bi bi-google me-2"></i>Bejelentkezés Google-lel
+    </button>
+    <p id="login-error" class="text-danger mt-3 mb-0 small" hidden></p>
+  </div>
+</div>
+
+<!-- Admin felület -->
+<div id="admin-panel" hidden>
+  <div class="admin-header">
+    <span class="admin-logo"><i class="bi bi-gem me-2"></i>IziÉkszer Admin</span>
+    <div class="d-flex align-items-center gap-3">
+      <span id="user-email" class="text-muted" style="font-size:0.85rem"></span>
+      <button id="logout-btn" class="btn btn-outline-gold btn-sm">Kijelentkezés</button>
+    </div>
+  </div>
+
+  <div class="container py-4">
+    <ul class="nav nav-tabs mb-4">
+      <li class="nav-item"><a class="nav-link active" data-tab="esemenyek" href="#">Események</a></li>
+      <li class="nav-item"><a class="nav-link" data-tab="arak" href="#">Árak</a></li>
+    </ul>
+
+    <!-- Események -->
+    <div id="tab-esemenyek">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Események</h5>
+        <button class="btn btn-gold btn-sm" id="add-esemeny-btn"><i class="bi bi-plus me-1"></i>Új esemény</button>
+      </div>
+
+      <div id="esemeny-form-wrapper" class="card mb-4" hidden>
+        <div class="card-body">
+          <h6 id="form-title" class="mb-3" style="color:var(--gold)">Új esemény</h6>
+          <input type="hidden" id="esemeny-id">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Cím *</label>
+              <input type="text" class="form-control" id="esemeny-cim" placeholder="pl. JászfaluNapok">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Helyszín *</label>
+              <input type="text" class="form-control" id="esemeny-helyszin" placeholder="pl. Pilisjászfalu">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Dátum *</label>
+              <input type="date" class="form-control" id="esemeny-datum">
+            </div>
+            <div class="col-md-8">
+              <label class="form-label">Facebook URL <span style="color:#666">(opcionális)</span></label>
+              <input type="url" class="form-control" id="esemeny-url" placeholder="https://fb.me/e/...">
+            </div>
+          </div>
+          <div class="mt-3 d-flex gap-2">
+            <button class="btn btn-gold btn-sm" id="save-esemeny-btn">Mentés</button>
+            <button class="btn btn-outline-gold btn-sm" id="cancel-esemeny-btn">Mégse</button>
+            <span id="save-error" class="text-danger small align-self-center" hidden></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body p-0">
+          <table class="table mb-0">
+            <thead>
+              <tr>
+                <th class="ps-3">Dátum</th>
+                <th>Cím</th>
+                <th>Helyszín</th>
+                <th>URL</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="esemenyek-table">
+              <tr><td colspan="5" id="empty-state">Betöltés...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Árak -->
+    <div id="tab-arak" hidden>
+      <h5 class="mb-4">Fülbelövés árak</h5>
+      <div class="card" style="max-width:600px">
+        <div class="card-body">
+          <div class="price-row">
+            <span class="price-label"><strong>Studex Universal</strong> – 1 db</span>
+            <input type="number" class="form-control price-input" data-ar-id="universal_1db" placeholder="0">
+            <span style="color:#888">Ft</span>
+          </div>
+          <div class="price-row">
+            <span class="price-label"><strong>Studex Universal</strong> – 1 pár</span>
+            <input type="number" class="form-control price-input" data-ar-id="universal_1par" placeholder="0">
+            <span style="color:#888">Ft</span>
+          </div>
+          <div class="price-row">
+            <span class="price-label"><strong>Studex Universal</strong> – Orr lyukasztás</span>
+            <input type="number" class="form-control price-input" data-ar-id="universal_orr" placeholder="0">
+            <span style="color:#888">Ft</span>
+          </div>
+          <div class="price-row">
+            <span class="price-label"><strong>Studex System 75</strong> – 1 pár</span>
+            <input type="number" class="form-control price-input" data-ar-id="system75_1par" placeholder="0">
+            <span style="color:#888">Ft</span>
+          </div>
+          <div class="mt-4 d-flex align-items-center gap-3">
+            <button class="btn btn-gold btn-sm" id="save-arak-btn">Árak mentése</button>
+            <span id="arak-saved-msg" class="text-success small" hidden>Mentve</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBpANZuxKAqjOmoFFimX6A25fDbUZ_ikvQ",
+  authDomain: "iziekszer.firebaseapp.com",
+  projectId: "iziekszer",
+  storageBucket: "iziekszer.firebasestorage.app",
+  messagingSenderId: "48329057382",
+  appId: "1:48329057382:web:5dad043d8f860df3f7f9a7",
+  measurementId: "G-QRVBJGEHRN"
+};
+
+const ADMIN_EMAILS = [
+  "izabella.szlovak92@gmail.com",
+  "varhidibence93@gmail.com"
+];
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// --- Auth ---
+document.getElementById("google-login-btn").addEventListener("click", async () => {
+  const err = document.getElementById("login-error");
+  try {
+    const result = await signInWithPopup(auth, new GoogleAuthProvider());
+    if (!ADMIN_EMAILS.includes(result.user.email)) {
+      await signOut(auth);
+      err.textContent = "Ez a fiók nem rendelkezik admin jogosultsággal.";
+      err.hidden = false;
+    }
+  } catch (e) {
+    err.textContent = "Hiba: " + e.message;
+    err.hidden = false;
+  }
+});
+
+document.getElementById("logout-btn").addEventListener("click", () => signOut(auth));
+
+onAuthStateChanged(auth, user => {
+  const isAdmin = user && ADMIN_EMAILS.includes(user.email);
+  document.getElementById("login-screen").hidden = !!isAdmin;
+  document.getElementById("admin-panel").hidden = !isAdmin;
+  if (isAdmin) {
+    document.getElementById("user-email").textContent = user.email;
+    loadEsemenyek();
+    loadArak();
+  }
+});
+
+// --- Tabs ---
+document.querySelectorAll("[data-tab]").forEach(link => {
+  link.addEventListener("click", e => {
+    e.preventDefault();
+    document.querySelectorAll("[data-tab]").forEach(l => l.classList.remove("active"));
+    link.classList.add("active");
+    document.getElementById("tab-esemenyek").hidden = link.dataset.tab !== "esemenyek";
+    document.getElementById("tab-arak").hidden = link.dataset.tab !== "arak";
+  });
+});
+
+// --- Események ---
+let esemenyek = [];
+
+async function loadEsemenyek() {
+  const q = query(collection(db, "esemenyek"), orderBy("datum", "desc"));
+  const snap = await getDocs(q);
+  esemenyek = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  renderEsemenyek();
+}
+
+function renderEsemenyek() {
+  const ma = new Date().toISOString().split("T")[0];
+  const tbody = document.getElementById("esemenyek-table");
+  if (!esemenyek.length) {
+    tbody.innerHTML = `<tr><td colspan="5" id="empty-state">Még nincs esemény. Adj hozzá egyet!</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = esemenyek.map(e => `
+    <tr>
+      <td class="ps-3">
+        ${e.datum}
+        <span class="${e.datum >= ma ? 'badge-upcoming' : 'badge-past'}">${e.datum >= ma ? 'Közelgő' : 'Korábbi'}</span>
+      </td>
+      <td>${e.cim}</td>
+      <td>${e.helyszin}</td>
+      <td>${e.url ? `<a href="${e.url}" target="_blank" style="color:var(--gold)"><i class="bi bi-box-arrow-up-right"></i></a>` : '–'}</td>
+      <td class="text-end pe-3">
+        <button class="btn btn-outline-gold btn-sm me-1" onclick="editEsemeny('${e.id}')"><i class="bi bi-pencil"></i></button>
+        <button class="btn btn-sm" style="border:1px solid #555;color:#888" onclick="deleteEsemeny('${e.id}')"><i class="bi bi-trash"></i></button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+document.getElementById("add-esemeny-btn").addEventListener("click", () => {
+  clearForm();
+  document.getElementById("form-title").textContent = "Új esemény";
+  document.getElementById("esemeny-form-wrapper").hidden = false;
+});
+
+document.getElementById("cancel-esemeny-btn").addEventListener("click", () => {
+  document.getElementById("esemeny-form-wrapper").hidden = true;
+});
+
+document.getElementById("save-esemeny-btn").addEventListener("click", async () => {
+  const id = document.getElementById("esemeny-id").value;
+  const cim = document.getElementById("esemeny-cim").value.trim();
+  const helyszin = document.getElementById("esemeny-helyszin").value.trim();
+  const datum = document.getElementById("esemeny-datum").value;
+  const url = document.getElementById("esemeny-url").value.trim();
+  const errEl = document.getElementById("save-error");
+
+  if (!cim || !helyszin || !datum) {
+    errEl.textContent = "A cím, helyszín és dátum kötelező!";
+    errEl.hidden = false;
+    return;
+  }
+  errEl.hidden = true;
+
+  const data = { cim, helyszin, datum };
+  if (url) data.url = url;
+
+  try {
+    if (id) {
+      await updateDoc(doc(db, "esemenyek", id), data);
+    } else {
+      await addDoc(collection(db, "esemenyek"), data);
+    }
+    document.getElementById("esemeny-form-wrapper").hidden = true;
+    await loadEsemenyek();
+  } catch (e) {
+    errEl.textContent = "Mentési hiba: " + e.message;
+    errEl.hidden = false;
+  }
+});
+
+function clearForm() {
+  document.getElementById("esemeny-id").value = "";
+  document.getElementById("esemeny-cim").value = "";
+  document.getElementById("esemeny-helyszin").value = "";
+  document.getElementById("esemeny-datum").value = "";
+  document.getElementById("esemeny-url").value = "";
+  document.getElementById("save-error").hidden = true;
+}
+
+window.editEsemeny = (id) => {
+  const e = esemenyek.find(x => x.id === id);
+  if (!e) return;
+  document.getElementById("esemeny-id").value = e.id;
+  document.getElementById("esemeny-cim").value = e.cim;
+  document.getElementById("esemeny-helyszin").value = e.helyszin;
+  document.getElementById("esemeny-datum").value = e.datum;
+  document.getElementById("esemeny-url").value = e.url || "";
+  document.getElementById("form-title").textContent = "Esemény szerkesztése";
+  document.getElementById("save-error").hidden = true;
+  document.getElementById("esemeny-form-wrapper").hidden = false;
+};
+
+window.deleteEsemeny = async (id) => {
+  if (!confirm("Biztosan törlöd ezt az eseményt?")) return;
+  await deleteDoc(doc(db, "esemenyek", id));
+  await loadEsemenyek();
+};
+
+// --- Árak ---
+async function loadArak() {
+  const snap = await getDocs(collection(db, "arak"));
+  snap.forEach(d => {
+    const input = document.querySelector(`.price-input[data-ar-id="${d.id}"]`);
+    if (input && d.data().ar !== undefined) input.value = d.data().ar;
+  });
+}
+
+document.getElementById("save-arak-btn").addEventListener("click", async () => {
+  const inputs = document.querySelectorAll(".price-input");
+  const saves = Array.from(inputs).map(input => {
+    const ar = parseInt(input.value);
+    if (isNaN(ar)) return null;
+    return setDoc(doc(db, "arak", input.dataset.arId), { ar });
+  }).filter(Boolean);
+  await Promise.all(saves);
+  const msg = document.getElementById("arak-saved-msg");
+  msg.hidden = false;
+  setTimeout(() => { msg.hidden = true; }, 3000);
+});
+</script>
+</body>
+</html>
