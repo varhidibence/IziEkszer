@@ -567,6 +567,24 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
   mask-composite: intersect;
 }
 
+.fb-event-photo {
+  width: 80%;
+  max-width: 600px;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+  border-radius: 0;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  -webkit-mask-composite: destination-in;
+  mask-image:
+    linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  mask-composite: intersect;
+}
+
 /* === Fülbelövés Section === */
 .fulbeloves-section {
   background-color: var(--bg-main);
@@ -1162,6 +1180,27 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
   color: var(--color-text-muted);
 }
 
+.event-card-anchor {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.event-card--link {
+  cursor: pointer;
+}
+
+.event-card--link:hover {
+  border-left-color: var(--color-gold-dark);
+  box-shadow: 0 4px 16px rgba(201, 169, 110, 0.2);
+}
+
+.event-card-ext {
+  font-size: 0.75rem;
+  opacity: 0.6;
+  vertical-align: middle;
+}
+
 .event-card.korabbi {
   opacity: 0.5;
   filter: grayscale(60%);
@@ -1295,6 +1334,12 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 
   .fb-intro-photo-wrapper {
     margin-bottom: 20px;
+  }
+
+  .fb-event-photo {
+    width: 80vw;
+    max-width: none;
+    margin: 0 auto;
   }
 }
 
