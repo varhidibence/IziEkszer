@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, getDoc, doc, orderBy, query } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBpANZuxKAqjOmoFFimX6A25fDbUZ_ikvQ",
@@ -68,5 +68,28 @@ async function loadArak() {
   });
 }
 
+function textToHtml(text) {
+  return text
+    .split(/\n\n+/)
+    .map(para => `<p>${para.replace(/\n/g, "<br>")}</p>`)
+    .join("");
+}
+
+async function loadPromo() {
+  const snap = await getDoc(doc(db, "settings", "esemeny_promo"));
+  if (!snap.exists()) return;
+  const data = snap.data();
+  if (!data.title && !data.body && !data.slogan) return;
+  const box = document.getElementById("esemeny-promo-box");
+  const titleEl = document.getElementById("esemeny-promo-title");
+  const bodyEl = document.getElementById("esemeny-promo-body");
+  const sloganEl = document.getElementById("esemeny-promo-slogan");
+  if (titleEl) titleEl.textContent = data.title || "";
+  if (bodyEl) bodyEl.innerHTML = data.body ? textToHtml(data.body) : "";
+  if (sloganEl) sloganEl.textContent = data.slogan || "";
+  if (box) box.style.display = "";
+}
+
 loadEsemenyek();
 loadArak();
+loadPromo();

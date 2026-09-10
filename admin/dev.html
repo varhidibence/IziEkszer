@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IziÉkszer Admin</title>
+  <title>IziÉkszer Admin [DEV]</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <style>
@@ -14,11 +14,9 @@
       --text: #e8d5b0;
     }
     body { background: var(--bg); color: var(--text); min-height: 100vh; font-family: sans-serif; }
-    #login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-    .login-card { background: var(--bg-card); border: 1px solid var(--gold); border-radius: 1rem; padding: 2.5rem; text-align: center; min-width: 320px; }
-    .login-card h4 { color: var(--gold); }
     .admin-header { background: var(--bg-card); border-bottom: 1px solid #333; padding: 0.9rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
     .admin-logo { color: var(--gold); font-weight: bold; font-size: 1.1rem; }
+    .dev-badge { background: #c0392b; color: #fff; font-size: 0.7rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; letter-spacing: 0.05em; }
     .btn-gold { background: var(--gold); color: #1a1a1a; border: none; font-weight: 500; }
     .btn-gold:hover { background: #b8924d; color: #1a1a1a; }
     .btn-outline-gold { border: 1px solid var(--gold); color: var(--gold); background: transparent; }
@@ -48,145 +46,126 @@
 </head>
 <body>
 
-<!-- Bejelentkezés -->
-<div id="login-screen">
-  <div class="login-card">
-    <img src="../pics/main_logo_transparent.png" alt="IziÉkszer" height="60" class="mb-3">
-    <h4 class="mb-1">Admin belépés</h4>
-    <p class="text-muted mb-4" style="font-size:0.9rem">Csak jogosult Google-fiókkal férhetsz hozzá.</p>
-    <button id="google-login-btn" class="btn btn-gold px-4">
-      <i class="bi bi-google me-2"></i>Bejelentkezés Google-lel
-    </button>
-    <p id="login-error" class="text-danger mt-3 mb-0 small" hidden></p>
-  </div>
+<div class="admin-header">
+  <span class="admin-logo"><i class="bi bi-gem me-2"></i>IziÉkszer Admin <span class="dev-badge ms-2">DEV</span></span>
+  <span class="text-muted" style="font-size:0.85rem">Lokális tesztelés – auth nélkül</span>
 </div>
 
-<!-- Admin felület -->
-<div id="admin-panel" hidden>
-  <div class="admin-header">
-    <span class="admin-logo"><i class="bi bi-gem me-2"></i>IziÉkszer Admin</span>
-    <div class="d-flex align-items-center gap-3">
-      <span id="user-email" class="text-muted" style="font-size:0.85rem"></span>
-      <button id="logout-btn" class="btn btn-outline-gold btn-sm">Kijelentkezés</button>
+<div class="container py-4">
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item"><a class="nav-link active" data-tab="esemenyek" href="#">Események</a></li>
+    <li class="nav-item"><a class="nav-link" data-tab="arak" href="#">Árak</a></li>
+  </ul>
+
+  <!-- Események -->
+  <div id="tab-esemenyek">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="mb-0">Események</h5>
+      <button class="btn btn-gold btn-sm" id="add-esemeny-btn"><i class="bi bi-plus me-1"></i>Új esemény</button>
+    </div>
+
+    <div id="esemeny-form-wrapper" class="card mb-4" hidden>
+      <div class="card-body">
+        <h6 id="form-title" class="mb-3" style="color:var(--gold)">Új esemény</h6>
+        <input type="hidden" id="esemeny-id">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Cím *</label>
+            <input type="text" class="form-control" id="esemeny-cim" placeholder="pl. JászfaluNapok">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Helyszín *</label>
+            <input type="text" class="form-control" id="esemeny-helyszin" placeholder="pl. Pilisjászfalu">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Dátum *</label>
+            <input type="date" class="form-control" id="esemeny-datum">
+          </div>
+          <div class="col-md-8">
+            <label class="form-label">Facebook URL <span style="color:#666">(opcionális)</span></label>
+            <input type="url" class="form-control" id="esemeny-url" placeholder="https://fb.me/e/...">
+          </div>
+        </div>
+        <div class="mt-3 d-flex gap-2">
+          <button class="btn btn-gold btn-sm" id="save-esemeny-btn">Mentés</button>
+          <button class="btn btn-outline-gold btn-sm" id="cancel-esemeny-btn">Mégse</button>
+          <span id="save-error" class="text-danger small align-self-center" hidden></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead>
+            <tr>
+              <th class="ps-3">Dátum</th>
+              <th>Cím</th>
+              <th>Helyszín</th>
+              <th>URL</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="esemenyek-table">
+            <tr><td colspan="5" id="empty-state">Betöltés...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Promo szöveg -->
+    <div class="card mt-4">
+      <div class="card-body">
+        <h6 class="mb-3" style="color:var(--gold)">Esemény promo szöveg</h6>
+        <div class="mb-3">
+          <label class="form-label">Cím <span style="color:#666">(esemeny-promo-title)</span></label>
+          <input type="text" class="form-control" id="promo-title" placeholder="pl. ✨ Találkozzunk szeptember 4–5-én! ✨">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Szövegtörzs <span style="color:#666">(üres sor = új bekezdés, sortörés = új sor)</span></label>
+          <textarea class="form-control" id="promo-body" rows="7" placeholder="Két nap, két helyszín, rengeteg ékszerélmény!&#10;&#10;📍 09.04. péntek – Dorogi Bányásznapok&#10;Az Otthon téren találjátok meg a standot!"></textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Szlogen <span style="color:#666">(esemeny-promo-slogan)</span></label>
+          <input type="text" class="form-control" id="promo-slogan" placeholder="pl. Válassz. Alkoss. Ragyogj. 💖">
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-gold btn-sm" id="save-promo-btn">Promo mentése</button>
+          <span id="promo-saved-msg" class="text-success small" hidden>Mentve</span>
+          <span id="promo-error-msg" class="text-danger small" hidden></span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="container py-4">
-    <ul class="nav nav-tabs mb-4">
-      <li class="nav-item"><a class="nav-link active" data-tab="esemenyek" href="#">Események</a></li>
-      <li class="nav-item"><a class="nav-link" data-tab="arak" href="#">Árak</a></li>
-    </ul>
-
-    <!-- Események -->
-    <div id="tab-esemenyek">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0">Események</h5>
-        <button class="btn btn-gold btn-sm" id="add-esemeny-btn"><i class="bi bi-plus me-1"></i>Új esemény</button>
-      </div>
-
-      <div id="esemeny-form-wrapper" class="card mb-4" hidden>
-        <div class="card-body">
-          <h6 id="form-title" class="mb-3" style="color:var(--gold)">Új esemény</h6>
-          <input type="hidden" id="esemeny-id">
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label class="form-label">Cím *</label>
-              <input type="text" class="form-control" id="esemeny-cim" placeholder="pl. JászfaluNapok">
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Helyszín *</label>
-              <input type="text" class="form-control" id="esemeny-helyszin" placeholder="pl. Pilisjászfalu">
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">Dátum *</label>
-              <input type="date" class="form-control" id="esemeny-datum">
-            </div>
-            <div class="col-md-8">
-              <label class="form-label">Facebook URL <span style="color:#666">(opcionális)</span></label>
-              <input type="url" class="form-control" id="esemeny-url" placeholder="https://fb.me/e/...">
-            </div>
-          </div>
-          <div class="mt-3 d-flex gap-2">
-            <button class="btn btn-gold btn-sm" id="save-esemeny-btn">Mentés</button>
-            <button class="btn btn-outline-gold btn-sm" id="cancel-esemeny-btn">Mégse</button>
-            <span id="save-error" class="text-danger small align-self-center" hidden></span>
-          </div>
+  <!-- Árak -->
+  <div id="tab-arak" hidden>
+    <h5 class="mb-4">Fülbelövés árak</h5>
+    <div class="card" style="max-width:600px">
+      <div class="card-body">
+        <div class="price-row">
+          <span class="price-label"><strong>Studex Universal</strong> – 1 db</span>
+          <input type="number" class="form-control price-input" data-ar-id="universal_1db" placeholder="0">
+          <span style="color:#888">Ft</span>
         </div>
-      </div>
-
-      <div class="card">
-        <div class="card-body p-0">
-          <table class="table mb-0">
-            <thead>
-              <tr>
-                <th class="ps-3">Dátum</th>
-                <th>Cím</th>
-                <th>Helyszín</th>
-                <th>URL</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="esemenyek-table">
-              <tr><td colspan="5" id="empty-state">Betöltés...</td></tr>
-            </tbody>
-          </table>
+        <div class="price-row">
+          <span class="price-label"><strong>Studex Universal</strong> – 1 pár</span>
+          <input type="number" class="form-control price-input" data-ar-id="universal_1par" placeholder="0">
+          <span style="color:#888">Ft</span>
         </div>
-      </div>
-
-      <!-- Promo szöveg -->
-      <div class="card mt-4">
-        <div class="card-body">
-          <h6 class="mb-3" style="color:var(--gold)">Esemény promo szöveg</h6>
-          <div class="mb-3">
-            <label class="form-label">Cím <span style="color:#666">(esemeny-promo-title)</span></label>
-            <input type="text" class="form-control" id="promo-title" placeholder="pl. ✨ Találkozzunk szeptember 4–5-én! ✨">
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Szövegtörzs <span style="color:#666">(üres sor = új bekezdés, sortörés = új sor)</span></label>
-            <textarea class="form-control" id="promo-body" rows="7" placeholder="Két nap, két helyszín, rengeteg ékszerélmény!&#10;&#10;📍 09.04. péntek – Dorogi Bányásznapok&#10;Az Otthon téren találjátok meg a standot!"></textarea>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Szlogen <span style="color:#666">(esemeny-promo-slogan)</span></label>
-            <input type="text" class="form-control" id="promo-slogan" placeholder="pl. Válassz. Alkoss. Ragyogj. 💖">
-          </div>
-          <div class="d-flex align-items-center gap-3">
-            <button class="btn btn-gold btn-sm" id="save-promo-btn">Promo mentése</button>
-            <span id="promo-saved-msg" class="text-success small" hidden>Mentve</span>
-            <span id="promo-error-msg" class="text-danger small" hidden></span>
-          </div>
+        <div class="price-row">
+          <span class="price-label"><strong>Studex Universal</strong> – Orr lyukasztás</span>
+          <input type="number" class="form-control price-input" data-ar-id="universal_orr" placeholder="0">
+          <span style="color:#888">Ft</span>
         </div>
-      </div>
-    </div>
-
-    <!-- Árak -->
-    <div id="tab-arak" hidden>
-      <h5 class="mb-4">Fülbelövés árak</h5>
-      <div class="card" style="max-width:600px">
-        <div class="card-body">
-          <div class="price-row">
-            <span class="price-label"><strong>Studex Universal</strong> – 1 db</span>
-            <input type="number" class="form-control price-input" data-ar-id="universal_1db" placeholder="0">
-            <span style="color:#888">Ft</span>
-          </div>
-          <div class="price-row">
-            <span class="price-label"><strong>Studex Universal</strong> – 1 pár</span>
-            <input type="number" class="form-control price-input" data-ar-id="universal_1par" placeholder="0">
-            <span style="color:#888">Ft</span>
-          </div>
-          <div class="price-row">
-            <span class="price-label"><strong>Studex Universal</strong> – Orr lyukasztás</span>
-            <input type="number" class="form-control price-input" data-ar-id="universal_orr" placeholder="0">
-            <span style="color:#888">Ft</span>
-          </div>
-          <div class="price-row">
-            <span class="price-label"><strong>Studex System 75</strong> – 1 pár</span>
-            <input type="number" class="form-control price-input" data-ar-id="system75_1par" placeholder="0">
-            <span style="color:#888">Ft</span>
-          </div>
-          <div class="mt-4 d-flex align-items-center gap-3">
-            <button class="btn btn-gold btn-sm" id="save-arak-btn">Árak mentése</button>
-            <span id="arak-saved-msg" class="text-success small" hidden>Mentve</span>
-          </div>
+        <div class="price-row">
+          <span class="price-label"><strong>Studex System 75</strong> – 1 pár</span>
+          <input type="number" class="form-control price-input" data-ar-id="system75_1par" placeholder="0">
+          <span style="color:#888">Ft</span>
+        </div>
+        <div class="mt-4 d-flex align-items-center gap-3">
+          <button class="btn btn-gold btn-sm" id="save-arak-btn">Árak mentése</button>
+          <span id="arak-saved-msg" class="text-success small" hidden>Mentve</span>
         </div>
       </div>
     </div>
@@ -196,7 +175,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { getFirestore, collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, setDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -209,44 +187,8 @@ const firebaseConfig = {
   measurementId: "G-QRVBJGEHRN"
 };
 
-const ADMIN_EMAILS = [
-  "izabella.szlovak92@gmail.com",
-  "varhidibence93@gmail.com"
-];
-
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 const db = getFirestore(app);
-
-// --- Auth ---
-document.getElementById("google-login-btn").addEventListener("click", async () => {
-  const err = document.getElementById("login-error");
-  try {
-    const result = await signInWithPopup(auth, new GoogleAuthProvider());
-    if (!ADMIN_EMAILS.includes(result.user.email)) {
-      await signOut(auth);
-      err.textContent = "Ez a fiók nem rendelkezik admin jogosultsággal.";
-      err.hidden = false;
-    }
-  } catch (e) {
-    err.textContent = "Hiba: " + e.message;
-    err.hidden = false;
-  }
-});
-
-document.getElementById("logout-btn").addEventListener("click", () => signOut(auth));
-
-onAuthStateChanged(auth, user => {
-  const isAdmin = user && ADMIN_EMAILS.includes(user.email);
-  document.getElementById("login-screen").hidden = !!isAdmin;
-  document.getElementById("admin-panel").hidden = !isAdmin;
-  if (isAdmin) {
-    document.getElementById("user-email").textContent = user.email;
-    loadEsemenyek();
-    loadArak();
-    loadPromo();
-  }
-});
 
 // --- Tabs ---
 document.querySelectorAll("[data-tab]").forEach(link => {
@@ -411,6 +353,11 @@ document.getElementById("save-arak-btn").addEventListener("click", async () => {
   msg.hidden = false;
   setTimeout(() => { msg.hidden = true; }, 3000);
 });
+
+// Betöltés
+loadEsemenyek();
+loadArak();
+loadPromo();
 </script>
 </body>
 </html>
