@@ -96,6 +96,44 @@ async function loadPromo() {
   }
 }
 
+function termekKartya(t, picPath) {
+  return `
+    <div class="col-6 col-md-4 col-lg-3">
+      <div class="card product-card">
+        ${t.kep ? `<img src="${picPath}${t.kep}" class="card-img-top" alt="${t.nev}">` : ''}
+        <div class="card-body text-center">
+          <h6 class="card-title">${t.nev}</h6>
+          ${t.anyag ? `<p class="text-muted small mb-1">${t.anyag}</p>` : ''}
+          ${t.ar !== undefined ? `<p class="price">${t.ar.toLocaleString("hu-HU")} Ft</p>` : ''}
+        </div>
+      </div>
+    </div>`;
+}
+
+async function loadTermekek() {
+  const container = document.getElementById("termekek-container");
+  if (!container) return;
+  const snap = await getDocs(collection(db, "termekek"));
+  const termekek = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  termekek.sort((a, b) => (a.sorrend || 0) - (b.sorrend || 0));
+  container.innerHTML = termekek.length
+    ? termekek.map(t => termekKartya(t, "pics/ekszerek/")).join("")
+    : `<p class="text-muted">Hamarosan...</p>`;
+}
+
+async function loadCharmTermekek() {
+  const container = document.getElementById("charm-container");
+  if (!container) return;
+  const snap = await getDocs(collection(db, "charm_termekek"));
+  const termekek = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  termekek.sort((a, b) => (a.sorrend || 0) - (b.sorrend || 0));
+  container.innerHTML = termekek.length
+    ? termekek.map(t => termekKartya(t, "pics/charmbar/")).join("")
+    : `<p class="text-muted">Hamarosan...</p>`;
+}
+
 loadEsemenyek();
 loadArak();
 loadPromo();
+loadTermekek();
+loadCharmTermekek();
