@@ -882,7 +882,7 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 
 .fb-stones-img {
   width: 100%;
-  max-width: 480px;
+  max-width: 240px;
   height: auto;
   object-fit: contain;
   display: block;

@@ -76,18 +76,24 @@ function textToHtml(text) {
 }
 
 async function loadPromo() {
-  const snap = await getDoc(doc(db, "settings", "esemeny_promo"));
-  if (!snap.exists()) return;
-  const data = snap.data();
-  if (!data.title && !data.body && !data.slogan) return;
-  const box = document.getElementById("esemeny-promo-box");
-  const titleEl = document.getElementById("esemeny-promo-title");
-  const bodyEl = document.getElementById("esemeny-promo-body");
-  const sloganEl = document.getElementById("esemeny-promo-slogan");
-  if (titleEl) titleEl.textContent = data.title || "";
-  if (bodyEl) bodyEl.innerHTML = data.body ? textToHtml(data.body) : "";
-  if (sloganEl) sloganEl.textContent = data.slogan || "";
-  if (box) box.style.display = "";
+  try {
+    const snap = await getDoc(doc(db, "settings", "esemeny_promo"));
+    console.log("[promo] exists:", snap.exists(), snap.data());
+    if (!snap.exists()) return;
+    const data = snap.data();
+    if (!data.title && !data.body && !data.slogan) return;
+    const box = document.getElementById("esemeny-promo-box");
+    const titleEl = document.getElementById("esemeny-promo-title");
+    const bodyEl = document.getElementById("esemeny-promo-body");
+    const sloganEl = document.getElementById("esemeny-promo-slogan");
+    if (titleEl) titleEl.textContent = data.title || "";
+    if (bodyEl) bodyEl.innerHTML = data.body ? textToHtml(data.body) : "";
+    if (sloganEl) sloganEl.textContent = data.slogan || "";
+    if (box) box.style.display = "";
+    console.log("[promo] megjelenítve");
+  } catch (e) {
+    console.error("[promo] hiba:", e);
+  }
 }
 
 loadEsemenyek();

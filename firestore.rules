@@ -18,5 +18,13 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
+    match /termekek/{doc} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /charm_termekek/{doc} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
   }
 }
