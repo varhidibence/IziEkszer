@@ -673,12 +673,12 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
   margin: 0 auto;
   border-radius: 0;
   -webkit-mask-image:
-    linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%),
-    linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+    linear-gradient(to right, transparent 0%, black 15%, black 95%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 15%, black 95%, transparent 100%);
   -webkit-mask-composite: destination-in;
   mask-image:
-    linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%),
-    linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+    linear-gradient(to right, transparent 0%, black 15%, black 95%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 15%, black 95%, transparent 100%);
   mask-composite: intersect;
 }
 
@@ -979,7 +979,7 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 
 .fb-stones-img {
   width: 100%;
-  max-width: 240px;
+  max-width: 200px;
   height: auto;
   object-fit: contain;
   display: block;
@@ -989,7 +989,7 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 .fb-shapes-inline {
   display: flex;
   justify-content: center;
-  gap: 14px;
+  gap: 4px;
 }
 
 .fb-shape-item {
@@ -1001,8 +1001,8 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 }
 
 .fb-shape-item img {
-  width: 72px;
-  height: 72px;
+  width: 48px;
+  height: 48px;
   object-fit: contain;
   transition: transform 0.2s ease;
 }
@@ -1140,6 +1140,34 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
   font-weight: 700;
   color: var(--color-primary);
   margin-bottom: 0.5rem !important;
+}
+
+.esemeny-promo-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.esemeny-promo-text {
+  flex: 1;
+}
+
+.esemeny-promo-kep {
+  max-width: 220px;
+  width: 220px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+@media (max-width: 576px) {
+  .esemeny-promo-inner {
+    flex-direction: column;
+  }
+  .esemeny-promo-kep {
+    max-width: 100%;
+    width: 100%;
+  }
 }
 
 .esemeny-promo-slogan {
@@ -1347,6 +1375,45 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
   border-top: 1px solid var(--color-gold);
   color: var(--color-text-muted);
   padding: 24px 0;
+}
+
+.footer-brand {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-gold);
+}
+
+.footer-company {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem 0.5rem;
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.footer-links a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: var(--color-gold);
+  text-decoration: underline;
+}
+
+.footer-sep {
+  color: #555;
+}
+
+.footer-copy {
+  font-size: 0.78rem;
+  color: #666;
 }
 
 /* === Responsive === */
