@@ -103,14 +103,16 @@ async function loadPromo() {
 }
 
 function termekKartya(t, picPath) {
+  const arStr = t.ar !== undefined ? t.ar.toLocaleString("hu-HU") + " Ft" : "";
+  const onclick = `openProductModal('${picPath}${t.kep}','${t.nev.replace(/'/g,"\\'")}','${t.nev.replace(/'/g,"\\'")}','${(t.anyag||"").replace(/'/g,"\\'")}','${arStr}')`;
   return `
     <div class="col-6 col-md-4 col-lg-3">
-      <div class="card product-card">
+      <div class="card product-card" style="cursor:pointer" onclick="${onclick}">
         ${t.kep ? `<img src="${picPath}${t.kep}" class="card-img-top" alt="${t.nev}">` : ''}
         <div class="card-body text-center">
           <h6 class="card-title">${t.nev}</h6>
           ${t.anyag ? `<p class="text-muted small mb-1">${t.anyag}</p>` : ''}
-          ${t.ar !== undefined ? `<p class="price">${t.ar.toLocaleString("hu-HU")} Ft</p>` : ''}
+          ${t.ar !== undefined ? `<p class="price">${arStr}</p>` : ''}
         </div>
       </div>
     </div>`;
