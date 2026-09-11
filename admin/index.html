@@ -153,10 +153,20 @@
           </div>
           <div class="mb-3">
             <label class="form-label">Kép <span style="color:#666">(jobbra jelenik meg a szöveg mellett)</span></label>
-            <input type="file" class="form-control" id="promo-kep-file" accept="image/*">
+            <select class="form-select" id="promo-kep-select">
+              <option value="">– Nincs kép –</option>
+              <optgroup label="Fülbelövés">
+                <option value="pics/fulbeloves/fulbeloves_rendevenyen_2026.jpg">fulbeloves_rendevenyen_2026.jpg</option>
+                <option value="pics/fulbeloves/intro_photo.png">intro_photo.png</option>
+              </optgroup>
+              <optgroup label="Charm Bar">
+                <option value="pics/charmbar/charmbar_rendezvenyen_2026.jpg">charmbar_rendezvenyen_2026.jpg</option>
+                <option value="pics/charmbar/fb_charmbar_2.jpg">fb_charmbar_2.jpg</option>
+                <option value="pics/charmbar/izi_charmbar_facebook_event.jpg">izi_charmbar_facebook_event.jpg</option>
+              </optgroup>
+            </select>
             <div id="promo-kep-preview-wrap" class="mt-2" style="display:none">
               <img id="promo-kep-preview" src="" alt="Promo kép" style="max-height:140px;border-radius:6px;border:1px solid #444;object-fit:contain">
-              <button type="button" class="btn btn-sm ms-2" style="border:1px solid #555;color:#888;vertical-align:top" id="promo-kep-torles-btn">Kép törlése</button>
             </div>
           </div>
           <div class="d-flex align-items-center gap-3">
@@ -346,7 +356,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { getFirestore, collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, setDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBpANZuxKAqjOmoFFimX6A25fDbUZ_ikvQ",
@@ -366,7 +375,6 @@ const ADMIN_EMAILS = [
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app);
 
 // --- Auth ---
 document.getElementById("google-login-btn").addEventListener("click", async () => {
@@ -768,8 +776,6 @@ window.deleteCharm = async (id) => {
 };
 
 // --- Promo ---
-let promoKepUrl = "";
-
 async function loadPromo() {
   const snap = await getDoc(doc(db, "settings", "esemeny_promo"));
   if (!snap.exists()) return;
@@ -778,54 +784,33 @@ async function loadPromo() {
   if (data.body !== undefined) document.getElementById("promo-body").value = data.body;
   if (data.slogan !== undefined) document.getElementById("promo-slogan").value = data.slogan;
   if (data.kepUrl) {
-    promoKepUrl = data.kepUrl;
-    const preview = document.getElementById("promo-kep-preview");
-    preview.src = data.kepUrl;
+    document.getElementById("promo-kep-select").value = data.kepUrl;
+    document.getElementById("promo-kep-preview").src = "../" + data.kepUrl;
     document.getElementById("promo-kep-preview-wrap").style.display = "";
   }
 }
 
-document.getElementById("promo-kep-file").addEventListener("change", function() {
-  if (this.files && this.files[0]) {
-    const reader = new FileReader();
-    reader.onload = e => {
-      document.getElementById("promo-kep-preview").src = e.target.result;
-      document.getElementById("promo-kep-preview-wrap").style.display = "";
-    };
-    reader.readAsDataURL(this.files[0]);
+document.getElementById("promo-kep-select").addEventListener("change", function() {
+  const preview = document.getElementById("promo-kep-preview");
+  const wrap = document.getElementById("promo-kep-preview-wrap");
+  if (this.value) {
+    preview.src = "../" + this.value;
+    wrap.style.display = "";
+  } else {
+    preview.src = "";
+    wrap.style.display = "none";
   }
-});
-
-document.getElementById("promo-kep-torles-btn").addEventListener("click", () => {
-  promoKepUrl = "";
-  document.getElementById("promo-kep-file").value = "";
-  document.getElementById("promo-kep-preview-wrap").style.display = "none";
-  document.getElementById("promo-kep-preview").src = "";
 });
 
 document.getElementById("save-promo-btn").addEventListener("click", async () => {
   const title = document.getElementById("promo-title").value.trim();
   const body = document.getElementById("promo-body").value.trim();
   const slogan = document.getElementById("promo-slogan").value.trim();
+  const kepUrl = document.getElementById("promo-kep-select").value;
   const savedMsg = document.getElementById("promo-saved-msg");
   const errorMsg = document.getElementById("promo-error-msg");
-  const fileInput = document.getElementById("promo-kep-file");
-  const saveBtn = document.getElementById("save-promo-btn");
 
   try {
-    saveBtn.disabled = true;
-    saveBtn.textContent = "Mentés...";
-
-    let kepUrl = promoKepUrl;
-    if (fileInput.files && fileInput.files[0]) {
-      const file = fileInput.files[0];
-      const storageRef = ref(storage, "promo/esemeny_promo_kep");
-      await uploadBytes(storageRef, file);
-      kepUrl = await getDownloadURL(storageRef);
-      promoKepUrl = kepUrl;
-      fileInput.value = "";
-    }
-
     const data = { title, body, slogan };
     if (kepUrl) data.kepUrl = kepUrl;
     await setDoc(doc(db, "settings", "esemeny_promo"), data);
@@ -836,9 +821,6 @@ document.getElementById("save-promo-btn").addEventListener("click", async () => 
   } catch (e) {
     errorMsg.textContent = "Mentési hiba: " + e.message;
     errorMsg.hidden = false;
-  } finally {
-    saveBtn.disabled = false;
-    saveBtn.textContent = "Promo mentése";
   }
 });
 
