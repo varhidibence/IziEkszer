@@ -1144,29 +1144,52 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 
 .esemeny-promo-inner {
   display: flex;
-  align-items: flex-start;
-  gap: 1.5rem;
+  align-items: stretch;
+  gap: 0;
 }
 
 .esemeny-promo-text {
   flex: 1;
+  padding-right: 1.5rem;
+  min-width: 0;
+}
+
+.esemeny-promo-kep-wrap {
+  flex: 0 0 33.333%;
+  position: relative;
+  border-radius: 0 8px 8px 0;
+  overflow: hidden;
 }
 
 .esemeny-promo-kep {
-  max-width: 220px;
-  width: 220px;
-  border-radius: 8px;
-  object-fit: cover;
-  flex-shrink: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  -webkit-mask-composite: destination-in;
+  mask-image:
+    linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  mask-composite: intersect;
 }
 
 @media (max-width: 576px) {
   .esemeny-promo-inner {
     flex-direction: column;
   }
-  .esemeny-promo-kep {
-    max-width: 100%;
+  .esemeny-promo-text {
+    padding-right: 0;
+  }
+  .esemeny-promo-kep-wrap {
     width: 100%;
+    height: 200px;
+    border-radius: 0 0 8px 8px;
   }
 }
 
