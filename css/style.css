@@ -1562,15 +1562,19 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 .product-modal-content {
   position: relative;
   z-index: 1;
-  width: min(340px, 90vw);
+  width: 80vw;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .product-modal-content .product-card {
   margin: 0;
 }
 
-.product-modal-content .card-img-top {
-  max-height: 60vh;
+.product-modal-content .product-card .card-img-top {
+  height: auto;
+  max-height: calc(80vh - 120px);
+  width: 100%;
   object-fit: contain;
 }
 
