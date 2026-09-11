@@ -87,12 +87,13 @@ async function loadPromo() {
     const bodyEl = document.getElementById("esemeny-promo-body");
     const sloganEl = document.getElementById("esemeny-promo-slogan");
     const kepEl = document.getElementById("esemeny-promo-kep");
+    const kepWrap = document.getElementById("esemeny-promo-kep-wrap");
     if (titleEl) titleEl.textContent = data.title || "";
     if (bodyEl) bodyEl.innerHTML = data.body ? textToHtml(data.body) : "";
     if (sloganEl) sloganEl.textContent = data.slogan || "";
-    if (kepEl && data.kepUrl) {
+    if (kepEl && kepWrap && data.kepUrl) {
       kepEl.src = data.kepUrl;
-      kepEl.style.display = "";
+      kepWrap.style.display = "";
     }
     if (box) box.style.display = "";
     console.log("[promo] megjelenítve");
