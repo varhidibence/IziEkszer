@@ -684,7 +684,6 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 
 /* === Fülbelövés Section === */
 .fulbeloves-section {
-  background-color: var(--bg-main);
   font-family: 'Times New Roman', Times, serif;
 }
 
@@ -1250,7 +1249,13 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 }
 
 .section-alt {
-  background-color: rgba(201, 169, 110, 0.06);
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(201, 169, 110, 0.26) 3%,
+    rgba(201, 169, 110, 0.26) 97%,
+    transparent 100%
+  );
 }
 
 .section-title {

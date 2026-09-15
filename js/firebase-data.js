@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-import { getFirestore, collection, getDocs, getDoc, doc, orderBy, query } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, getDoc, addDoc, doc, orderBy, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBpANZuxKAqjOmoFFimX6A25fDbUZ_ikvQ",
@@ -145,3 +145,35 @@ loadArak();
 loadPromo();
 loadTermekek();
 loadCharmTermekek();
+
+// --- Workshop regisztráció ---
+const workshopForm = document.getElementById("workshopRegForm");
+if (workshopForm) {
+  workshopForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById("workshop-reg-btn");
+    const successEl = document.getElementById("workshop-reg-success");
+    const errorEl = document.getElementById("workshop-reg-error");
+    const nev = document.getElementById("workshop-nev").value.trim();
+    const email = document.getElementById("workshop-email").value.trim();
+
+    btn.disabled = true;
+    successEl.hidden = true;
+    errorEl.hidden = true;
+
+    try {
+      await addDoc(collection(db, "workshop_regisztraciok"), {
+        nev,
+        email,
+        datum: serverTimestamp()
+      });
+      workshopForm.reset();
+      successEl.hidden = false;
+    } catch (err) {
+      errorEl.textContent = "Hiba történt, kérjük próbáld újra.";
+      errorEl.hidden = false;
+    } finally {
+      btn.disabled = false;
+    }
+  });
+}
