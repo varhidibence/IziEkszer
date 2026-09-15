@@ -26,5 +26,9 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
+    match /workshop_regisztraciok/{doc} {
+      allow read, delete: if isAdmin();
+      allow create: if true;
+    }
   }
 }
