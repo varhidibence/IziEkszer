@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-import { getFirestore, collection, getDocs, getDoc, addDoc, doc, orderBy, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, getDoc, doc, orderBy, query } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBpANZuxKAqjOmoFFimX6A25fDbUZ_ikvQ",
@@ -20,16 +20,19 @@ function esemenyKartya(e, isPast) {
   const honapNagybetu = honap.charAt(0).toUpperCase() + honap.slice(1);
   const nap = d.getDate();
   const napNeve = d.toLocaleDateString("hu-HU", { weekday: "long" });
+  const vanReszletek = !isPast && !!e.regisztracioSzukseges;
+  const kulsoLink = !!e.url && !vanReszletek;
   const cardInner = `
-    <div class="card event-card${isPast ? ' korabbi' : ''}${e.url ? ' event-card--link' : ''}">
+    <div class="card event-card${isPast ? ' korabbi' : ''}${kulsoLink ? ' event-card--link' : ''}">
       <div class="card-body">
-        <h5 class="card-title"><i class="bi bi-calendar-event me-2" style="color: var(--color-gold)"></i>${e.cim}${e.url ? ' <i class="bi bi-box-arrow-up-right event-card-ext" title="Megnyitás"></i>' : ''}</h5>
+        <h5 class="card-title"><i class="bi bi-calendar-event me-2" style="color: var(--color-gold)"></i>${e.cim}${kulsoLink ? ' <i class="bi bi-box-arrow-up-right event-card-ext" title="Megnyitás"></i>' : ''}</h5>
         <p class="text-muted">${honapNagybetu} ${nap}. ${napNeve} – ${e.helyszin}</p>
+        ${vanReszletek ? `<a href="esemeny.html?id=${e.id}" class="btn btn-gold btn-sm mt-2">Részletek és regisztráció</a>` : ''}
       </div>
     </div>`;
   return `
     <div class="col-md-6 col-lg-4">
-      ${e.url ? `<a href="${e.url}" target="_blank" rel="noopener noreferrer" class="event-card-anchor">${cardInner}</a>` : cardInner}
+      ${kulsoLink ? `<a href="${e.url}" target="_blank" rel="noopener noreferrer" class="event-card-anchor">${cardInner}</a>` : cardInner}
     </div>`;
 }
 
@@ -145,35 +148,3 @@ loadArak();
 loadPromo();
 loadTermekek();
 loadCharmTermekek();
-
-// --- Workshop regisztráció ---
-const workshopForm = document.getElementById("workshopRegForm");
-if (workshopForm) {
-  workshopForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const btn = document.getElementById("workshop-reg-btn");
-    const successEl = document.getElementById("workshop-reg-success");
-    const errorEl = document.getElementById("workshop-reg-error");
-    const nev = document.getElementById("workshop-nev").value.trim();
-    const email = document.getElementById("workshop-email").value.trim();
-
-    btn.disabled = true;
-    successEl.hidden = true;
-    errorEl.hidden = true;
-
-    try {
-      await addDoc(collection(db, "workshop_regisztraciok"), {
-        nev,
-        email,
-        datum: serverTimestamp()
-      });
-      workshopForm.reset();
-      successEl.hidden = false;
-    } catch (err) {
-      errorEl.textContent = "Hiba történt, kérjük próbáld újra.";
-      errorEl.hidden = false;
-    } finally {
-      btn.disabled = false;
-    }
-  });
-}

@@ -78,6 +78,7 @@
       <li class="nav-item"><a class="nav-link" data-tab="ekszer-webshop" href="#">Ékszer webshop</a></li>
       <li class="nav-item"><a class="nav-link" data-tab="charm-webshop" href="#">Charm webshop</a></li>
       <li class="nav-item"><a class="nav-link" data-tab="workshop" href="#">Workshop</a></li>
+      <li class="nav-item"><a class="nav-link" data-tab="esemeny-jelentkezok" href="#">Esemény jelentkezők</a></li>
     </ul>
 
     <!-- Események -->
@@ -104,9 +105,30 @@
               <label class="form-label">Dátum *</label>
               <input type="date" class="form-control" id="esemeny-datum">
             </div>
-            <div class="col-md-8">
-              <label class="form-label">Facebook URL <span style="color:#666">(opcionális)</span></label>
+            <div class="col-md-4">
+              <div class="form-check mt-4 pt-1">
+                <input class="form-check-input" type="checkbox" id="esemeny-regisztracio">
+                <label class="form-check-label" for="esemeny-regisztracio">
+                  Regisztrációs form szükséges
+                </label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Létszámkorlát <span style="color:#666">(üres = nincs limit)</span></label>
+              <input type="number" min="1" class="form-control" id="esemeny-letszam-korlat" placeholder="pl. 15">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Facebook URL <span style="color:#666">(opcionális, csak ha nincs regisztráció)</span></label>
               <input type="url" class="form-control" id="esemeny-url" placeholder="https://fb.me/e/...">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Térkép keresési cím <span style="color:#666">(ez jelenik meg a térképen az esemény oldalán; üresen a Helyszín mezőt használjuk. Ha a lenti előnézet üres, pontosíts – pl. település + utca/tér neve, irányítószám)</span></label>
+              <input type="text" class="form-control mb-2" id="esemeny-terkep-cim" placeholder="pl. Fő tér 1, Pilisjászfalu, 2085">
+              <iframe id="esemeny-terkep-preview" style="width:100%;height:180px;border:1px solid #444;border-radius:6px" loading="lazy"></iframe>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Leírás <span style="color:#666">(opcionális – ha "Regisztrációs form szükséges" be van pipálva, a közelgő eseménynél megjelenik egy "Részletek és regisztráció" gomb, ami egy saját aloldalra visz; a leírás ott jelenik meg a regisztrációs form fölött. Üres sor = új bekezdés)</span></label>
+              <textarea class="form-control" id="esemeny-leiras" rows="5" placeholder="Az esemény részletes leírása..."></textarea>
             </div>
           </div>
           <div class="mt-3 d-flex gap-2">
@@ -125,7 +147,7 @@
                 <th class="ps-3">Dátum</th>
                 <th>Cím</th>
                 <th>Helyszín</th>
-                <th>URL</th>
+                <th>Regisztráció</th>
                 <th></th>
               </tr>
             </thead>
@@ -342,6 +364,32 @@
       </div>
     </div>
 
+    <!-- Esemény jelentkezők -->
+    <div id="tab-esemeny-jelentkezok" hidden>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Esemény jelentkezők</h5>
+      </div>
+      <div class="card">
+        <div class="card-body p-0">
+          <table class="table mb-0">
+            <thead>
+              <tr>
+                <th class="ps-3">Esemény</th>
+                <th>Név</th>
+                <th>Email</th>
+                <th>Telefon</th>
+                <th>Jelentkezés időpontja</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="esemeny-reg-table">
+              <tr><td colspan="6" style="color:#666;text-align:center;padding:2rem">Betöltés...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
     <!-- Árak -->
     <div id="tab-arak" hidden>
       <h5 class="mb-4">Fülbelövés árak</h5>
@@ -381,7 +429,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-import { getFirestore, collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, setDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, setDoc, orderBy, query, increment } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBpANZuxKAqjOmoFFimX6A25fDbUZ_ikvQ",
@@ -432,6 +480,7 @@ onAuthStateChanged(auth, user => {
     loadTermekek();
     loadCharm();
     loadWorkshop();
+    loadEsemenyRegek();
   }
 });
 
@@ -471,7 +520,7 @@ function renderEsemenyek() {
       </td>
       <td>${e.cim}</td>
       <td>${e.helyszin}</td>
-      <td>${e.url ? `<a href="${e.url}" target="_blank" style="color:var(--gold)"><i class="bi bi-box-arrow-up-right"></i></a>` : '–'}</td>
+      <td>${e.regisztracioSzukseges ? `<a href="../esemeny.html?id=${e.id}" target="_blank" style="color:var(--gold)">${e.resztvevoSzam || 0}${e.letszamKorlat ? ' / ' + e.letszamKorlat : ''} fő <i class="bi bi-box-arrow-up-right"></i></a>` : '–'}</td>
       <td class="text-end pe-3">
         <button class="btn btn-outline-gold btn-sm me-1" onclick="editEsemeny('${e.id}')"><i class="bi bi-pencil"></i></button>
         <button class="btn btn-sm" style="border:1px solid #555;color:#888" onclick="deleteEsemeny('${e.id}')"><i class="bi bi-trash"></i></button>
@@ -496,6 +545,11 @@ document.getElementById("save-esemeny-btn").addEventListener("click", async () =
   const helyszin = document.getElementById("esemeny-helyszin").value.trim();
   const datum = document.getElementById("esemeny-datum").value;
   const url = document.getElementById("esemeny-url").value.trim();
+  const leiras = document.getElementById("esemeny-leiras").value.trim();
+  const terkepCim = document.getElementById("esemeny-terkep-cim").value.trim();
+  const regisztracioSzukseges = document.getElementById("esemeny-regisztracio").checked;
+  const letszamKorlatRaw = document.getElementById("esemeny-letszam-korlat").value.trim();
+  const letszamKorlat = letszamKorlatRaw ? parseInt(letszamKorlatRaw) : null;
   const errEl = document.getElementById("save-error");
 
   if (!cim || !helyszin || !datum) {
@@ -505,8 +559,13 @@ document.getElementById("save-esemeny-btn").addEventListener("click", async () =
   }
   errEl.hidden = true;
 
-  const data = { cim, helyszin, datum };
-  if (url) data.url = url;
+  const data = { cim, helyszin, datum, url: url || null, leiras: leiras || null, terkepCim: terkepCim || null, regisztracioSzukseges, letszamKorlat };
+  if (!id) {
+    data.resztvevoSzam = 0;
+  } else {
+    const existing = esemenyek.find(x => x.id === id);
+    if (existing && existing.resztvevoSzam === undefined) data.resztvevoSzam = 0;
+  }
 
   try {
     if (id) {
@@ -528,7 +587,12 @@ function clearForm() {
   document.getElementById("esemeny-helyszin").value = "";
   document.getElementById("esemeny-datum").value = "";
   document.getElementById("esemeny-url").value = "";
+  document.getElementById("esemeny-leiras").value = "";
+  document.getElementById("esemeny-terkep-cim").value = "";
+  document.getElementById("esemeny-regisztracio").checked = false;
+  document.getElementById("esemeny-letszam-korlat").value = "";
   document.getElementById("save-error").hidden = true;
+  updateTerkepPreview();
 }
 
 window.editEsemeny = (id) => {
@@ -539,10 +603,27 @@ window.editEsemeny = (id) => {
   document.getElementById("esemeny-helyszin").value = e.helyszin;
   document.getElementById("esemeny-datum").value = e.datum;
   document.getElementById("esemeny-url").value = e.url || "";
+  document.getElementById("esemeny-leiras").value = e.leiras || "";
+  document.getElementById("esemeny-terkep-cim").value = e.terkepCim || "";
+  document.getElementById("esemeny-regisztracio").checked = !!e.regisztracioSzukseges;
+  document.getElementById("esemeny-letszam-korlat").value = e.letszamKorlat != null ? e.letszamKorlat : "";
   document.getElementById("form-title").textContent = "Esemény szerkesztése";
   document.getElementById("save-error").hidden = true;
   document.getElementById("esemeny-form-wrapper").hidden = false;
+  updateTerkepPreview();
 };
+
+function updateTerkepPreview() {
+  const terkepCim = document.getElementById("esemeny-terkep-cim").value.trim();
+  const helyszin = document.getElementById("esemeny-helyszin").value.trim();
+  const cim = terkepCim || helyszin;
+  document.getElementById("esemeny-terkep-preview").src = cim
+    ? `https://www.google.com/maps?q=${encodeURIComponent(cim)}&output=embed`
+    : "";
+}
+
+document.getElementById("esemeny-terkep-cim").addEventListener("blur", updateTerkepPreview);
+document.getElementById("esemeny-helyszin").addEventListener("blur", updateTerkepPreview);
 
 window.deleteEsemeny = async (id) => {
   if (!confirm("Biztosan törlöd ezt az eseményt?")) return;
@@ -900,6 +981,55 @@ window.deleteWorkshopReg = async (id) => {
   if (!confirm("Biztosan törlöd ezt a regisztrációt?")) return;
   await deleteDoc(doc(db, "workshop_regisztraciok", id));
   await loadWorkshop();
+};
+
+// --- Esemény jelentkezők ---
+let esemenyRegek = [];
+
+async function loadEsemenyRegek() {
+  const q = query(collection(db, "esemeny_regisztraciok"), orderBy("datum", "desc"));
+  const snap = await getDocs(q);
+  esemenyRegek = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  renderEsemenyRegek();
+}
+
+function renderEsemenyRegek() {
+  const tbody = document.getElementById("esemeny-reg-table");
+  if (!esemenyRegek.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="color:#666;text-align:center;padding:2rem">Még nincs jelentkezés.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = esemenyRegek.map(r => {
+    const datum = r.datum?.toDate
+      ? r.datum.toDate().toLocaleString("hu-HU", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" })
+      : "–";
+    return `
+    <tr>
+      <td class="ps-3">${r.esemenyCim || '–'}</td>
+      <td>${r.nev}</td>
+      <td><a href="mailto:${r.email}" style="color:var(--gold)">${r.email}</a></td>
+      <td>${r.telefon || '–'}</td>
+      <td>${datum}</td>
+      <td class="text-end pe-3">
+        <button class="btn btn-sm" style="border:1px solid #555;color:#888" onclick="deleteEsemenyReg('${r.id}')"><i class="bi bi-trash"></i></button>
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+window.deleteEsemenyReg = async (id) => {
+  if (!confirm("Biztosan törlöd ezt a jelentkezést?")) return;
+  const reg = esemenyRegek.find(r => r.id === id);
+  await deleteDoc(doc(db, "esemeny_regisztraciok", id));
+  if (reg?.esemenyId) {
+    try {
+      await updateDoc(doc(db, "esemenyek", reg.esemenyId), { resztvevoSzam: increment(-1) });
+    } catch (e) {
+      // az esemény már törölve lehet, ez nem hiba
+    }
+  }
+  await loadEsemenyRegek();
+  await loadEsemenyek();
 };
 
 // --- Árak ---

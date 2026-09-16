@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Esemény – IziÉkszer</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <style>
+    .esemeny-section {
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 2.5rem 1rem 4rem;
+    }
+    .esemeny-header {
+      text-align: center;
+    }
+    .esemeny-logo {
+      display: block;
+      height: 96px;
+      margin: 0 auto 1.5rem;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--color-gold);
+      font-size: 0.88rem;
+      text-decoration: none;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+      color: var(--color-gold);
+    }
+    .esemeny-cim {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: 0.25rem;
+    }
+    .esemeny-datum {
+      color: var(--color-gold);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    .esemeny-leiras p {
+      margin-bottom: 1rem;
+    }
+    .esemeny-row {
+      margin-top: 1.5rem;
+    }
+    .esemeny-map {
+      width: 100%;
+      height: 220px;
+      border: 0;
+      border-radius: 8px;
+    }
+    .esemeny-panel {
+      background: linear-gradient(135deg, var(--color-bg-alt, #fdf8f0) 0%, #fff8ec 100%);
+      border-left: 4px solid var(--color-gold);
+      border-radius: 8px;
+      padding: 1.75rem;
+    }
+    .esemeny-panel h2 {
+      font-size: 1.15rem;
+      color: var(--color-primary);
+      margin-bottom: 1.25rem;
+    }
+    .esemeny-panel-text {
+      color: var(--color-text-muted);
+      font-style: italic;
+      margin: 0;
+    }
+    .esemeny-letszam-info {
+      color: var(--color-text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.25rem;
+    }
+    .esemeny-notfound {
+      text-align: center;
+      color: var(--color-text-muted);
+      padding: 3rem 0;
+    }
+    @media (max-width: 991px) {
+      .esemeny-row {
+        margin-top: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="esemeny-section">
+    <div class="esemeny-header">
+      <a href="index.html" class="back-link">&#8592; Vissza a főoldalra</a>
+      <a href="index.html"><img src="pics/main_logo_transparent.png" alt="IziÉkszer" class="esemeny-logo"></a>
+    </div>
+
+    <p id="esemeny-loading" class="text-center text-muted">Betöltés...</p>
+
+    <div id="esemeny-not-found" class="esemeny-notfound" hidden>
+      <p>Ezt az eseményt nem találjuk, vagy már törölve lett.</p>
+      <a href="index.html#esemenyek" class="btn btn-gold btn-sm mt-2">Vissza az eseményekhez</a>
+    </div>
+
+    <div id="esemeny-content" hidden>
+      <h1 id="esemeny-cim" class="esemeny-cim"></h1>
+      <p id="esemeny-datum" class="esemeny-datum"></p>
+
+      <div class="row esemeny-row g-4">
+        <div class="col-lg-7">
+          <div id="esemeny-leiras" class="esemeny-leiras"></div>
+        </div>
+        <div class="col-lg-5">
+          <div class="esemeny-map-wrap d-none d-md-block mb-4">
+            <iframe id="esemeny-map" class="esemeny-map" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+
+          <div id="esemeny-lezarult" class="esemeny-panel" hidden>
+            <p class="esemeny-panel-text">Ez az esemény már lezajlott.</p>
+          </div>
+          <div id="esemeny-betelt" class="esemeny-panel" hidden>
+            <p class="esemeny-panel-text">Sajnáljuk, betelt a létszám erre az eseményre. Vedd fel velünk a kapcsolatot, ha várólistára szeretnél kerülni.</p>
+          </div>
+
+          <div id="esemeny-reg-wrap" class="esemeny-panel" hidden>
+            <h2>Regisztráció</h2>
+            <p id="esemeny-letszam-info" class="esemeny-letszam-info" hidden></p>
+            <form id="esemenyRegForm">
+              <div class="mb-3">
+                <label for="esemeny-nev" class="form-label">Név *</label>
+                <input type="text" class="form-control" id="esemeny-nev" required placeholder="Teljes neved">
+              </div>
+              <div class="mb-3">
+                <label for="esemeny-email" class="form-label">Email *</label>
+                <input type="email" class="form-control" id="esemeny-email" required placeholder="email@example.com">
+              </div>
+              <div class="mb-3">
+                <label for="esemeny-telefon" class="form-label">Telefonszám *</label>
+                <input type="tel" class="form-control" id="esemeny-telefon" required placeholder="+36 30 123 4567">
+              </div>
+              <div class="mb-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="esemeny-aszf" required>
+                  <label class="form-check-label" for="esemeny-aszf">
+                    Elolvastam és elfogadom az <a href="docs/Bella_Gold_Silver_ASZF_2026.pdf" target="_blank">ÁSZF</a>-et és az <a href="adatkezelesi-tajekoztato.html" target="_blank">Adatkezelési tájékoztatót</a>. *
+                  </label>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-gold" id="esemeny-reg-btn">Regisztráció</button>
+              <div>A fizetési részleteket e-mailben küldjük!
+              </div>
+            </form>
+            <p id="esemeny-reg-success" class="mt-3" style="color:var(--color-gold)" hidden>✅ Sikeresen regisztráltál! Hamarosan felvesszük veled a kapcsolatot.</p>
+            <p id="esemeny-reg-error" class="text-danger mt-3" hidden></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/esemeny-reszletek.js"></script>
+</body>
+</html>

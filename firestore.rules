@@ -9,6 +9,12 @@ service cloud.firestore {
     match /esemenyek/{doc} {
       allow read: if true;
       allow write: if isAdmin();
+      // Anyone may bump the participant counter by exactly 1 when registering
+      // (the registration doc itself is only readable by admins, so this is
+      // the only public-facing signal of how many people already registered).
+      allow update: if !isAdmin() &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['resztvevoSzam']) &&
+        request.resource.data.resztvevoSzam == resource.data.resztvevoSzam + 1;
     }
     match /arak/{doc} {
       allow read: if true;
@@ -27,6 +33,10 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
     match /workshop_regisztraciok/{doc} {
+      allow read, delete: if isAdmin();
+      allow create: if true;
+    }
+    match /esemeny_regisztraciok/{doc} {
       allow read, delete: if isAdmin();
       allow create: if true;
     }

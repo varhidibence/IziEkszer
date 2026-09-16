@@ -834,7 +834,7 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 .fb-baby-badge span {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--color-gold);
+  color: var(--color-primary);
   letter-spacing: 1px;
 }
 

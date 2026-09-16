@@ -35,13 +35,13 @@
         </li>
         <li>
           <div class="nav-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span
-              class="sep-line"></span></div><a href="#esemenyek"><img src="pics/menu_vector_icons/07_esemenyek.png"
-              alt="" class="nav-link-icon">Események</a>
+              class="sep-line"></span></div><a href="#charm-workshop"><img
+              src="pics/menu_vector_icons/09_diamond_sparkles.png" alt="" class="nav-link-icon">Charm Workshop</a>
         </li>
         <li>
           <div class="nav-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span
-              class="sep-line"></span></div><a href="#charm-workshop"><img
-              src="pics/menu_vector_icons/09_diamond_sparkles.png" alt="" class="nav-link-icon">Charm Workshop</a>
+              class="sep-line"></span></div><a href="#esemenyek"><img src="pics/menu_vector_icons/07_esemenyek.png"
+              alt="" class="nav-link-icon">Események</a>
         </li>
         <li>
           <div class="nav-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span
@@ -102,17 +102,17 @@
             class="sep-line"></span></div>
       </li>
       <li>
-        <a href="#esemenyek" onclick="closeMobileMenu()">
-          <img src="pics/menu_vector_icons/07_esemenyek.png" alt="" class="menu-icon-img">
-          Események
+        <a href="#charm-workshop" onclick="closeMobileMenu()">
+          <img src="pics/menu_vector_icons/09_diamond_sparkles.png" alt="" class="menu-icon-img">
+          Charm Workshop
         </a>
         <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span
             class="sep-line"></span></div>
       </li>
       <li>
-        <a href="#charm-workshop" onclick="closeMobileMenu()">
-          <img src="pics/menu_vector_icons/09_diamond_sparkles.png" alt="" class="menu-icon-img">
-          Charm Workshop
+        <a href="#esemenyek" onclick="closeMobileMenu()">
+          <img src="pics/menu_vector_icons/07_esemenyek.png" alt="" class="menu-icon-img">
+          Események
         </a>
         <div class="menu-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span
             class="sep-line"></span></div>
@@ -465,10 +465,10 @@
       </div>
 
       <!-- Price -->
-      <div class="fb-price-box">
+      <!-- <div class="fb-price-box">
         <p class="fb-price-label">Ár: 1 pár (bruttó)</p>
         <p class="fb-price" data-ar-id="system75_1par">17 000 Ft</p>
-      </div>
+      </div> -->
 
       <!-- Tartalmazza -->
       <div class="fb-includes">
@@ -571,29 +571,8 @@
     </div>
   </section>
 
-  <!-- Események -->
-  <section id="esemenyek" class="section-block">
-    <div class="container">
-      <h2 class="section-title">Események</h2>
-      <div class="gold-divider"></div>
-      <div class="esemeny-promo" id="esemeny-promo-box" style="display:none">
-        <div class="esemeny-promo-inner">
-          <div class="esemeny-promo-text">
-            <p class="esemeny-promo-title" id="esemeny-promo-title"></p>
-            <div id="esemeny-promo-body"></div>
-            <p class="esemeny-promo-slogan" id="esemeny-promo-slogan"></p>
-          </div>
-          <div id="esemeny-promo-kep-wrap" class="esemeny-promo-kep-wrap" style="display:none">
-            <img id="esemeny-promo-kep" src="" alt="" class="esemeny-promo-kep">
-          </div>
-        </div>
-      </div>
-      <div id="esemenyek-container"></div>
-    </div>
-  </section>
-
   <!-- Charm Workshop -->
-  <section id="charm-workshop" class="section-block section-alt">
+  <section id="charm-workshop" class="section-block">
     <div class="container">
       <h2 class="section-title">Charm Workshop</h2>
       <div class="gold-divider"></div>
@@ -610,45 +589,36 @@
 
           <hr style="border-color: var(--color-gold); opacity:0.3; margin: 1.5rem 0">
 
-          <p>👥 <strong>Maximum 15 fő!</strong></p>
-          <p>A részvétel előzetes regisztrációhoz kötött.</p>
-          <p>A helyfoglalás a regisztráció és a <strong>17 990 Ft-os részvételi díj</strong> befizetésével válik véglegessé.</p>
-
-          <form id="workshopRegForm" class="mt-4">
-            <div class="mb-3">
-              <label for="workshop-nev" class="form-label">Név *</label>
-              <input type="text" class="form-control" id="workshop-nev" required placeholder="Teljes neved">
-            </div>
-            <div class="mb-3">
-              <label for="workshop-email" class="form-label">Email *</label>
-              <input type="email" class="form-control" id="workshop-email" required placeholder="email@example.com">
-            </div>
-            <div class="mb-3">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="workshop-aszf" required>
-                <label class="form-check-label" for="workshop-aszf">
-                  Elolvastam és elfogadom az <a href="docs/Bella_Gold_Silver_ASZF_2026.pdf" target="_blank">ÁSZF</a>-et és az <a href="adatkezelesi-tajekoztato.html" target="_blank">Adatkezelési tájékoztatót</a>. *
-                </label>
-              </div>
-            </div>
-            <div class="mb-4">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="workshop-kepbeleegyezes" required>
-                <label class="form-check-label" for="workshop-kepbeleegyezes">
-                  Hozzájárulok, hogy a workshopon képek és videófelvételek készüljenek, amelyeket referenciaként felhasználhatnak a közösségi oldalakon. *
-                </label>
-              </div>
-            </div>
-            <button type="submit" class="btn btn-gold" id="workshop-reg-btn">Regisztráció</button>
-            <p id="workshop-reg-success" class="mt-3" style="color:var(--color-gold)" hidden>✅ Sikeresen regisztráltál! Hamarosan felvesszük veled a kapcsolatot.</p>
-            <p id="workshop-reg-error" class="text-danger mt-3" hidden></p>
-          </form>
+          <p class="rendezv-ujdonsag">🎉 Szeretnéd privát rendezvényként igényelni?</p>
+          <p>A Charm Workshopot privát rendezvényként is megrendelheted – legyen szó céges csapatépítőről, születésnapról, lánybúcsúról vagy baráti összejövetelről. Írj vagy hívj, és személyre szabott ajánlatot készítek a rendezvényetekhez.</p>
+          <a href="#kapcsolat" class="btn btn-gold mt-3">Érdeklődés</a>
         </div>
         <div class="col-lg-5 mt-4 mt-lg-0">
           <img src="pics/workshop/workshop_1.jpg" alt="Charm Workshop" class="img-fluid fb-event-photo mb-3">
           <img src="pics/workshop/workshop_2.jpg" alt="Charm Workshop" class="img-fluid fb-event-photo">
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- Események -->
+  <section id="esemenyek" class="section-block section-alt">
+    <div class="container">
+      <h2 class="section-title">Események</h2>
+      <div class="gold-divider"></div>
+      <div class="esemeny-promo" id="esemeny-promo-box" style="display:none">
+        <div class="esemeny-promo-inner">
+          <div class="esemeny-promo-text">
+            <p class="esemeny-promo-title" id="esemeny-promo-title"></p>
+            <div id="esemeny-promo-body"></div>
+            <p class="esemeny-promo-slogan" id="esemeny-promo-slogan"></p>
+          </div>
+          <div id="esemeny-promo-kep-wrap" class="esemeny-promo-kep-wrap" style="display:none">
+            <img id="esemeny-promo-kep" src="" alt="" class="esemeny-promo-kep">
+          </div>
+        </div>
+      </div>
+      <div id="esemenyek-container"></div>
     </div>
   </section>
 
