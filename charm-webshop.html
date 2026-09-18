@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Charm Bar Webshop – IziÉkszer</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <style>
+    .webshop-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 1rem 4rem;
+    }
+    .webshop-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .webshop-logo {
+      display: block;
+      height: 96px;
+      margin: 0 auto 1rem;
+    }
+    .webshop-header-buttons {
+      max-width: 520px;
+      margin: 1.5rem auto 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+    .webshop-header-buttons .hero-fedezd-btn {
+      display: inline-block;
+      width: auto;
+      flex: 1 1 200px;
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="webshop-section">
+    <div class="webshop-header">
+      <a href="index.html"><img src="pics/main_logo_transparent.png" alt="IziÉkszer" class="webshop-logo"></a>
+      <h1 class="section-title">Charm Bar Webshop</h1>
+      <div class="gold-divider"></div>
+      <div class="webshop-header-buttons">
+        <a href="index.html" class="hero-fedezd-btn">&#8592; Vissza a főoldalra</a>
+        <a href="ekszer-webshop.html" class="hero-fedezd-btn">Ékszer Futár Webshop →</a>
+      </div>
+    </div>
+
+    <div class="esemeny-promo mb-4">
+      <div class="esemeny-promo-inner">
+        <div class="esemeny-promo-text">
+          <p>✨Tervezd meg a saját izi charm ékszered!</p>
+          <p>📿 <strong>1. Válassz alapot</strong><br>
+          Karlánc / Nyaklánc / Fülbevaló / Kulcstartó</p>
+          <p>💎 <strong>2. Válassz charmokat</strong><br>
+          Válogass több száz charm közül.</p>
+          <p>🎨 <strong>3. Helyezd el őket</strong><br>
+          Tedd a charmokat a kívánt láncszemekre, a neked tetsző sorrendben.</p>
+          <p>🛒 <strong>4. Véglegesítsd</strong><br>
+          Ellenőrizd az összeállításod, majd add le a rendelésed.</p>
+          <p>📦 <strong>5. Én elkészítem</strong><br>
+          Pontosan a terveid alapján összeállítom, becsomagolom és postázom.</p>
+        </div>
+        <div class="esemeny-promo-kep-wrap">
+          <img src="pics/charmbar/fb_charmbar_2.jpg" alt="Charm Bar" class="esemeny-promo-kep">
+        </div>
+      </div>
+    </div>
+
+    <div id="charm-container" class="row g-4"></div>
+  </div>
+
+  <!-- Product modal -->
+  <div id="productModal" class="product-modal" aria-hidden="true">
+    <div class="product-modal-backdrop"></div>
+    <div class="product-modal-content">
+      <button class="product-modal-close" aria-label="Bezárás">&times;</button>
+      <div class="card product-card">
+        <div class="product-modal-img-wrap">
+          <img class="product-modal-img card-img-top" src="" alt="">
+          <button type="button" class="product-modal-nav product-modal-prev" aria-label="Előző kép">&lsaquo;</button>
+          <button type="button" class="product-modal-nav product-modal-next" aria-label="Következő kép">&rsaquo;</button>
+        </div>
+        <div class="product-modal-dots"></div>
+        <div class="card-body text-center">
+          <div class="product-modal-kategoriak product-kategoriak"></div>
+          <h5 class="product-modal-nev card-title"></h5>
+          <p class="product-modal-anyag text-muted small mb-1"></p>
+          <p class="product-modal-meret-suly text-muted small mb-1"></p>
+          <p class="product-modal-leiras text-muted small mb-2"></p>
+          <p class="product-modal-ar price mb-0"></p>
+          <p class="product-modal-elfogyott text-danger fw-bold mb-0"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/product-modal.js"></script>
+  <script type="module" src="js/firebase-data.js"></script>
+</body>
+</html>
