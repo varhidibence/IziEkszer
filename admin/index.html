@@ -41,6 +41,10 @@
     .price-label { flex: 1; font-size: 0.95rem; }
     .price-input { width: 130px; text-align: right; }
     #empty-state { color: #666; text-align: center; padding: 2rem; }
+    .kep-thumb { position: relative; width: 70px; height: 70px; border-radius: 4px; overflow: hidden; border: 1px solid #444; flex-shrink: 0; }
+    .kep-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .kep-thumb-remove { position: absolute; top: 0; right: 0; background: rgba(0,0,0,0.65); color: #fff; border: none; width: 20px; height: 20px; line-height: 18px; font-size: 14px; cursor: pointer; border-radius: 0 0 0 4px; padding: 0; }
+    .kep-thumb-remove:hover { background: #c0392b; }
     #promo-title, #promo-body, #promo-slogan { background: #fff; color: #000; border-color: #ccc; }
     #promo-title:focus, #promo-body:focus, #promo-slogan:focus { background: #fff; color: #000; }
     #promo-title::placeholder, #promo-body::placeholder, #promo-slogan::placeholder { color: #ccc; }
@@ -213,17 +217,18 @@
           <h6 id="termek-form-title" class="mb-3" style="color:var(--gold)">Új termék</h6>
           <input type="hidden" id="termek-id">
           <div class="row g-3">
-            <div class="col-md-7">
+            <div class="col-12">
               <div class="mb-3">
-                <label class="form-label">Kép *</label>
-                <select class="form-select" id="termek-kep">
-                  <option value="">– Válassz képet –</option>
-                  <option value="arany_pap_lanc.png">arany_pap_lanc.png</option>
-                  <option value="arany_sziv_lanc.png">arany_sziv_lanc.png</option>
-                  <option value="ezust_papirklipsz_lanc.png">ezust_papirklipsz_lanc.png</option>
-                  <option value="ezust_sziv_lanc.png">ezust_sziv_lanc.png</option>
-                </select>
+                <label class="form-label">Képek <span style="color:#666">(max 5)</span></label>
+                <div id="termek-kepek-lista" class="d-flex flex-wrap gap-2 mb-2"></div>
+                <input type="file" class="form-control" id="termek-kep-file" accept="image/*" multiple>
+                <div class="progress mt-2" id="termek-kep-progress-wrap" style="height:6px;display:none">
+                  <div class="progress-bar bg-warning" id="termek-kep-progress-bar" style="width:0%"></div>
+                </div>
+                <div id="termek-kep-progress-label" class="text-muted small mt-1" style="display:none"></div>
               </div>
+            </div>
+            <div class="col-md-7">
               <div class="mb-3">
                 <label class="form-label">Név *</label>
                 <input type="text" class="form-control" id="termek-nev" placeholder="pl. Arany szív lánc">
@@ -232,14 +237,38 @@
                 <label class="form-label">Anyag</label>
                 <input type="text" class="form-control" id="termek-anyag" placeholder="pl. 925-ös ezüst">
               </div>
-              <div>
-                <label class="form-label">Ár (Ft)</label>
-                <input type="number" class="form-control" id="termek-ar" placeholder="0">
+              <div class="mb-3">
+                <label class="form-label">Kategóriák</label>
+                <div id="termek-kategoriak-lista" class="d-flex flex-wrap gap-3 mb-2"></div>
+                <div class="input-group input-group-sm" style="max-width:280px">
+                  <input type="text" class="form-control" id="termek-uj-kategoria" placeholder="Új kategória neve">
+                  <button class="btn btn-outline-gold" type="button" id="termek-uj-kategoria-btn">+ Hozzáad</button>
+                </div>
               </div>
-            </div>
-            <div class="col-md-5 d-flex align-items-center justify-content-center">
-              <img id="termek-kep-preview" src="" alt="Előnézet" class="rounded" style="max-width:100%;display:none;border:1px solid #444;object-fit:contain;width:100%">
-              <span id="termek-kep-placeholder" class="text-muted" style="font-size:0.85rem">Kép előnézet</span>
+              <div class="row g-3">
+                <div class="col-6">
+                  <label class="form-label">Súly (g)</label>
+                  <input type="number" step="0.01" min="0" class="form-control" id="termek-suly" placeholder="pl. 3.2">
+                </div>
+                <div class="col-6">
+                  <label class="form-label">Méret</label>
+                  <input type="text" class="form-control" id="termek-meret" placeholder="pl. 45 cm">
+                </div>
+              </div>
+              <div class="mb-3 mt-3">
+                <label class="form-label">Leírás</label>
+                <textarea class="form-control" id="termek-leiras" rows="3" placeholder="Termékleírás..."></textarea>
+              </div>
+              <div class="row g-3">
+                <div class="col-6">
+                  <label class="form-label">Készlet (db)</label>
+                  <input type="number" min="0" class="form-control" id="termek-keszlet" placeholder="pl. 5">
+                </div>
+                <div class="col-6">
+                  <label class="form-label">Ár (Ft)</label>
+                  <input type="number" class="form-control" id="termek-ar" placeholder="0">
+                </div>
+              </div>
             </div>
           </div>
           <div class="mt-3 d-flex gap-2">
@@ -257,13 +286,15 @@
               <tr>
                 <th class="ps-3">Kép</th>
                 <th>Név</th>
+                <th>Kategória</th>
                 <th>Anyag</th>
+                <th>Készlet</th>
                 <th>Ár</th>
                 <th></th>
               </tr>
             </thead>
             <tbody id="termekek-table">
-              <tr><td colspan="5" style="color:#666;text-align:center;padding:2rem">Betöltés...</td></tr>
+              <tr><td colspan="7" style="color:#666;text-align:center;padding:2rem">Betöltés...</td></tr>
             </tbody>
           </table>
         </div>
@@ -282,16 +313,18 @@
           <h6 id="charm-form-title" class="mb-3" style="color:var(--gold)">Új charm termék</h6>
           <input type="hidden" id="charm-id">
           <div class="row g-3">
-            <div class="col-md-7">
+            <div class="col-12">
               <div class="mb-3">
-                <label class="form-label">Kép *</label>
-                <select class="form-select" id="charm-kep">
-                  <option value="">– Válassz képet –</option>
-                  <option value="fb_charmbar_2.jpg">fb_charmbar_2.jpg</option>
-                  <option value="izi_charmbar_facebook_event.jpg">izi_charmbar_facebook_event.jpg</option>
-                  <option value="charmbar_rendezvenyen_2026.jpg">charmbar_rendezvenyen_2026.jpg</option>
-                </select>
+                <label class="form-label">Képek <span style="color:#666">(max 5)</span></label>
+                <div id="charm-kepek-lista" class="d-flex flex-wrap gap-2 mb-2"></div>
+                <input type="file" class="form-control" id="charm-kep-file" accept="image/*" multiple>
+                <div class="progress mt-2" id="charm-kep-progress-wrap" style="height:6px;display:none">
+                  <div class="progress-bar bg-warning" id="charm-kep-progress-bar" style="width:0%"></div>
+                </div>
+                <div id="charm-kep-progress-label" class="text-muted small mt-1" style="display:none"></div>
               </div>
+            </div>
+            <div class="col-md-7">
               <div class="mb-3">
                 <label class="form-label">Név *</label>
                 <input type="text" class="form-control" id="charm-nev" placeholder="pl. Charm karkötő">
@@ -300,14 +333,22 @@
                 <label class="form-label">Anyag</label>
                 <input type="text" class="form-control" id="charm-anyag" placeholder="pl. rozsdamentes acél">
               </div>
+              <div class="mb-3">
+                <label class="form-label">Méret</label>
+                <input type="text" class="form-control" id="charm-meret" placeholder="pl. 1 cm">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Kategóriák</label>
+                <div id="charm-kategoriak-lista" class="d-flex flex-wrap gap-3 mb-2"></div>
+                <div class="input-group input-group-sm" style="max-width:280px">
+                  <input type="text" class="form-control" id="charm-uj-kategoria" placeholder="Új kategória neve">
+                  <button class="btn btn-outline-gold" type="button" id="charm-uj-kategoria-btn">+ Hozzáad</button>
+                </div>
+              </div>
               <div>
                 <label class="form-label">Ár (Ft)</label>
                 <input type="number" class="form-control" id="charm-ar" placeholder="0">
               </div>
-            </div>
-            <div class="col-md-5 d-flex align-items-center justify-content-center">
-              <img id="charm-kep-preview" src="" alt="Előnézet" class="rounded" style="max-height:200px;max-width:100%;display:none;border:1px solid #444;object-fit:contain;width:100%">
-              <span id="charm-kep-placeholder" class="text-muted" style="font-size:0.85rem">Kép előnézet</span>
             </div>
           </div>
           <div class="mt-3 d-flex gap-2">
@@ -325,13 +366,14 @@
               <tr>
                 <th class="ps-3">Kép</th>
                 <th>Név</th>
+                <th>Kategóriák</th>
                 <th>Anyag</th>
                 <th>Ár</th>
                 <th></th>
               </tr>
             </thead>
             <tbody id="charm-table">
-              <tr><td colspan="5" style="color:#666;text-align:center;padding:2rem">Betöltés...</td></tr>
+              <tr><td colspan="6" style="color:#666;text-align:center;padding:2rem">Betöltés...</td></tr>
             </tbody>
           </table>
         </div>
@@ -429,7 +471,8 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-import { getFirestore, collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, setDoc, orderBy, query, increment } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, setDoc, orderBy, query, increment, arrayUnion } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBpANZuxKAqjOmoFFimX6A25fDbUZ_ikvQ",
@@ -449,6 +492,194 @@ const ADMIN_EMAILS = [
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
+
+// --- Kép feltöltés helperek ---
+function compressImage(file, maxDim = 1600, quality = 0.85) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      let { width, height } = img;
+      if (width > maxDim || height > maxDim) {
+        if (width >= height) {
+          height = Math.round(height * (maxDim / width));
+          width = maxDim;
+        } else {
+          width = Math.round(width * (maxDim / height));
+          height = maxDim;
+        }
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+      canvas.toBlob(blob => resolve(blob || file), file.type, quality);
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      resolve(file);
+    };
+    img.src = objectUrl;
+  });
+}
+
+function isSajatStorageUrl(url) {
+  return typeof url === "string" && url.includes("firebasestorage.");
+}
+
+async function deleteStorageKepIfAny(url) {
+  if (!isSajatStorageUrl(url)) return;
+  try {
+    await deleteObject(ref(storage, url));
+  } catch (e) {
+    // már törölve lehet, vagy nincs jogosultság - nem blokkoló hiba
+  }
+}
+
+async function uploadTermekKep(file, folder, onProgress) {
+  const blob = await compressImage(file);
+  const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+  const path = `termek-kepek/${folder}/${crypto.randomUUID()}.${ext}`;
+  const storageRef = ref(storage, path);
+  const task = uploadBytesResumable(storageRef, blob, { contentType: file.type || "image/jpeg" });
+  return new Promise((resolve, reject) => {
+    task.on("state_changed",
+      snap => {
+        if (onProgress) onProgress(Math.round((snap.bytesTransferred / snap.totalBytes) * 100));
+      },
+      reject,
+      async () => {
+        const url = await getDownloadURL(task.snapshot.ref);
+        resolve(url);
+      }
+    );
+  });
+}
+
+function resolveKepSrc(kep, legacyPicPath) {
+  if (!kep) return "";
+  return kep.startsWith("http") ? kep : legacyPicPath + kep;
+}
+
+// --- Több kép kezelése (max 5 db / termék) ---
+const MAX_KEPEK = 5;
+
+function nyersKepLista(t) {
+  if (t.kepek && t.kepek.length) return t.kepek.slice();
+  if (t.kep) return [t.kep];
+  return [];
+}
+
+function ujKepAllapot() {
+  return { meglevo: [], ujFajlok: [] };
+}
+
+function kepekSzama(allapot) {
+  return allapot.meglevo.length + allapot.ujFajlok.length;
+}
+
+function renderKepLista(containerId, allapot, legacyPicPath) {
+  const container = document.getElementById(containerId);
+  const elemek = [];
+  allapot.meglevo.forEach((raw, i) => {
+    elemek.push(`
+      <div class="kep-thumb">
+        <img src="${resolveKepSrc(raw, legacyPicPath)}">
+        <button type="button" class="kep-thumb-remove" data-tipus="meglevo" data-idx="${i}">&times;</button>
+      </div>`);
+  });
+  allapot.ujFajlok.forEach((file, i) => {
+    elemek.push(`
+      <div class="kep-thumb">
+        <img src="${URL.createObjectURL(file)}">
+        <button type="button" class="kep-thumb-remove" data-tipus="uj" data-idx="${i}">&times;</button>
+      </div>`);
+  });
+  container.innerHTML = elemek.join("") || `<span class="text-muted" style="font-size:0.85rem">Nincs kép</span>`;
+  container.querySelectorAll(".kep-thumb-remove").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const idx = parseInt(btn.dataset.idx);
+      if (btn.dataset.tipus === "meglevo") allapot.meglevo.splice(idx, 1);
+      else allapot.ujFajlok.splice(idx, 1);
+      renderKepLista(containerId, allapot, legacyPicPath);
+    });
+  });
+}
+
+function kepFajlValasztasKezelo(allapot, containerId, legacyPicPath, fileInput, errEl) {
+  const maradek = MAX_KEPEK - kepekSzama(allapot);
+  const kivalasztott = Array.from(fileInput.files);
+  const hasznalhato = kivalasztott.slice(0, Math.max(0, maradek));
+  allapot.ujFajlok.push(...hasznalhato);
+  renderKepLista(containerId, allapot, legacyPicPath);
+  fileInput.value = "";
+  if (kivalasztott.length > hasznalhato.length && errEl) {
+    errEl.textContent = `Legfeljebb ${MAX_KEPEK} kép engedélyezett termékenként, ezért nem lett mindegyik hozzáadva.`;
+    errEl.hidden = false;
+    setTimeout(() => { errEl.hidden = true; }, 4000);
+  }
+}
+
+// --- Kategória listák (bővíthetők) ---
+let ekszerKategoriak = [];
+let charmKategoriak = [];
+const EKSZER_KATEGORIA_ALAPERTELMEZETT = ["Fülbevaló", "Karlánc", "Medál"];
+const CHARM_KATEGORIA_ALAPERTELMEZETT = ["Betű Charmok", "Szív alakú", "Virág", "Állatok"];
+
+async function loadKategoriaLista(docId, alapertelmezett) {
+  const snap = await getDoc(doc(db, "settings", docId));
+  if (snap.exists() && Array.isArray(snap.data().lista)) {
+    return snap.data().lista;
+  }
+  await setDoc(doc(db, "settings", docId), { lista: alapertelmezett });
+  return alapertelmezett.slice();
+}
+
+async function loadKategoriak() {
+  ekszerKategoriak = await loadKategoriaLista("kategoriak_ekszer", EKSZER_KATEGORIA_ALAPERTELMEZETT);
+  charmKategoriak = await loadKategoriaLista("kategoriak_charm", CHARM_KATEGORIA_ALAPERTELMEZETT);
+}
+
+async function ujKategoriaHozzaadasa(docId, listaRef, nev) {
+  if (!listaRef.includes(nev)) listaRef.push(nev);
+  await setDoc(doc(db, "settings", docId), { lista: arrayUnion(nev) }, { merge: true });
+}
+
+function renderKategoriaCheckboxok(containerId, lista, kivalasztottak, prefix) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = lista.length ? lista.map((k, i) => `
+    <div class="form-check form-check-inline m-0">
+      <input class="form-check-input kategoria-checkbox" type="checkbox" id="${prefix}-kat-${i}" value="${k}" ${kivalasztottak.includes(k) ? "checked" : ""}>
+      <label class="form-check-label" for="${prefix}-kat-${i}" style="font-size:0.85rem">${k}</label>
+    </div>
+  `).join("") : `<span class="text-muted" style="font-size:0.85rem">Még nincs kategória</span>`;
+}
+
+function getKivalasztottKategoriak(containerId) {
+  return Array.from(document.querySelectorAll(`#${containerId} .kategoria-checkbox:checked`)).map(cb => cb.value);
+}
+
+document.getElementById("termek-uj-kategoria-btn").addEventListener("click", async () => {
+  const input = document.getElementById("termek-uj-kategoria");
+  const nev = input.value.trim();
+  if (!nev) return;
+  const kivalasztottak = getKivalasztottKategoriak("termek-kategoriak-lista");
+  await ujKategoriaHozzaadasa("kategoriak_ekszer", ekszerKategoriak, nev);
+  renderKategoriaCheckboxok("termek-kategoriak-lista", ekszerKategoriak, kivalasztottak.concat(nev), "termek");
+  input.value = "";
+});
+
+document.getElementById("charm-uj-kategoria-btn").addEventListener("click", async () => {
+  const input = document.getElementById("charm-uj-kategoria");
+  const nev = input.value.trim();
+  if (!nev) return;
+  const kivalasztottak = getKivalasztottKategoriak("charm-kategoriak-lista");
+  await ujKategoriaHozzaadasa("kategoriak_charm", charmKategoriak, nev);
+  renderKategoriaCheckboxok("charm-kategoriak-lista", charmKategoriak, kivalasztottak.concat(nev), "charm");
+  input.value = "";
+});
 
 // --- Auth ---
 document.getElementById("google-login-btn").addEventListener("click", async () => {
@@ -477,6 +708,7 @@ onAuthStateChanged(auth, user => {
     loadEsemenyek();
     loadArak();
     loadPromo();
+    loadKategoriak();
     loadTermekek();
     loadCharm();
     loadWorkshop();
@@ -633,6 +865,7 @@ window.deleteEsemeny = async (id) => {
 
 // --- Termékek ---
 let termekek = [];
+let termekKepAllapot = ujKepAllapot();
 
 async function loadTermekek() {
   const snap = await getDocs(collection(db, "termekek"));
@@ -644,16 +877,18 @@ async function loadTermekek() {
 function renderTermekek() {
   const tbody = document.getElementById("termekek-table");
   if (!termekek.length) {
-    tbody.innerHTML = `<tr><td colspan="5" style="color:#666;text-align:center;padding:2rem">Még nincs termék. Adj hozzá egyet!</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" style="color:#666;text-align:center;padding:2rem">Még nincs termék. Adj hozzá egyet!</td></tr>`;
     return;
   }
   tbody.innerHTML = termekek.map(t => `
     <tr>
       <td class="ps-3">
-        ${t.kep ? `<img src="../pics/ekszerek/${t.kep}" style="height:104px;width:104px;object-fit:cover;border-radius:4px;border:1px solid #444">` : '–'}
+        ${nyersKepLista(t)[0] ? `<img src="${resolveKepSrc(nyersKepLista(t)[0], '../pics/ekszerek/')}" style="height:104px;width:104px;object-fit:cover;border-radius:4px;border:1px solid #444">` : '–'}
       </td>
       <td>${t.nev}</td>
+      <td>${(t.kategoriak && t.kategoriak.length) ? t.kategoriak.join(', ') : '–'}</td>
       <td>${t.anyag || '–'}</td>
+      <td>${t.keszlet !== undefined ? (t.keszlet === 0 ? '<span class="badge-past">Elfogyott</span>' : t.keszlet + ' db') : '–'}</td>
       <td>${t.ar !== undefined ? t.ar.toLocaleString("hu-HU") + ' Ft' : '–'}</td>
       <td class="text-end pe-3">
         <button class="btn btn-outline-gold btn-sm me-1" onclick="editTermek('${t.id}')"><i class="bi bi-pencil"></i></button>
@@ -673,26 +908,23 @@ document.getElementById("cancel-termek-btn").addEventListener("click", () => {
   document.getElementById("termek-form-wrapper").hidden = true;
 });
 
-document.getElementById("termek-kep").addEventListener("change", function() {
-  const preview = document.getElementById("termek-kep-preview");
-  const placeholder = document.getElementById("termek-kep-placeholder");
-  if (this.value) {
-    preview.src = "../pics/ekszerek/" + this.value;
-    preview.style.display = "";
-    placeholder.style.display = "none";
-  } else {
-    preview.style.display = "none";
-    placeholder.style.display = "";
-  }
+document.getElementById("termek-kep-file").addEventListener("change", function() {
+  kepFajlValasztasKezelo(termekKepAllapot, "termek-kepek-lista", "../pics/ekszerek/", this, document.getElementById("termek-save-error"));
 });
 
 document.getElementById("save-termek-btn").addEventListener("click", async () => {
   const id = document.getElementById("termek-id").value;
-  const kep = document.getElementById("termek-kep").value;
   const nev = document.getElementById("termek-nev").value.trim();
   const anyag = document.getElementById("termek-anyag").value.trim();
+  const kategoriak = getKivalasztottKategoriak("termek-kategoriak-lista");
+  const suly = parseFloat(document.getElementById("termek-suly").value);
+  const meret = document.getElementById("termek-meret").value.trim();
+  const leiras = document.getElementById("termek-leiras").value.trim();
+  const keszletRaw = document.getElementById("termek-keszlet").value.trim();
+  const keszlet = keszletRaw ? parseInt(keszletRaw) : undefined;
   const ar = parseInt(document.getElementById("termek-ar").value);
   const errEl = document.getElementById("termek-save-error");
+  const saveBtn = document.getElementById("save-termek-btn");
 
   if (!nev) {
     errEl.textContent = "A név kötelező!";
@@ -702,13 +934,39 @@ document.getElementById("save-termek-btn").addEventListener("click", async () =>
   errEl.hidden = true;
 
   const data = { nev };
-  if (kep) data.kep = kep;
   if (anyag) data.anyag = anyag;
+  if (kategoriak.length) data.kategoriak = kategoriak;
+  if (!isNaN(suly)) data.suly = suly;
+  if (meret) data.meret = meret;
+  if (leiras) data.leiras = leiras;
+  if (keszlet !== undefined && !isNaN(keszlet)) data.keszlet = keszlet;
   if (!isNaN(ar)) data.ar = ar;
   if (!id) data.sorrend = termekek.length;
 
+  saveBtn.disabled = true;
   try {
+    const ujUrlek = [];
+    if (termekKepAllapot.ujFajlok.length) {
+      const progressWrap = document.getElementById("termek-kep-progress-wrap");
+      const progressBar = document.getElementById("termek-kep-progress-bar");
+      const progressLabel = document.getElementById("termek-kep-progress-label");
+      progressWrap.style.display = "";
+      progressLabel.style.display = "";
+      for (let i = 0; i < termekKepAllapot.ujFajlok.length; i++) {
+        progressLabel.textContent = `Kép feltöltése: ${i + 1} / ${termekKepAllapot.ujFajlok.length}`;
+        const url = await uploadTermekKep(termekKepAllapot.ujFajlok[i], "ekszerek", pct => { progressBar.style.width = pct + "%"; });
+        ujUrlek.push(url);
+      }
+      progressWrap.style.display = "none";
+      progressLabel.style.display = "none";
+    }
+    const vegsoKepek = termekKepAllapot.meglevo.concat(ujUrlek);
+    if (vegsoKepek.length) data.kepek = vegsoKepek;
+
     if (id) {
+      const eredeti = termekek.find(x => x.id === id);
+      const torolt = eredeti ? nyersKepLista(eredeti).filter(u => !termekKepAllapot.meglevo.includes(u)) : [];
+      torolt.forEach(deleteStorageKepIfAny);
       await updateDoc(doc(db, "termekek", id), data);
     } else {
       await addDoc(collection(db, "termekek"), data);
@@ -718,15 +976,27 @@ document.getElementById("save-termek-btn").addEventListener("click", async () =>
   } catch (e) {
     errEl.textContent = "Mentési hiba: " + e.message;
     errEl.hidden = false;
+  } finally {
+    saveBtn.disabled = false;
   }
 });
 
 function clearTermekForm() {
   document.getElementById("termek-id").value = "";
-  document.getElementById("termek-kep").value = "";
-  document.getElementById("termek-kep-preview").style.display = "none";
+  document.getElementById("termek-kep-file").value = "";
+  document.getElementById("termek-kep-progress-wrap").style.display = "none";
+  document.getElementById("termek-kep-progress-bar").style.width = "0%";
+  document.getElementById("termek-kep-progress-label").style.display = "none";
+  termekKepAllapot = ujKepAllapot();
+  renderKepLista("termek-kepek-lista", termekKepAllapot, "../pics/ekszerek/");
   document.getElementById("termek-nev").value = "";
   document.getElementById("termek-anyag").value = "";
+  renderKategoriaCheckboxok("termek-kategoriak-lista", ekszerKategoriak, [], "termek");
+  document.getElementById("termek-uj-kategoria").value = "";
+  document.getElementById("termek-suly").value = "";
+  document.getElementById("termek-meret").value = "";
+  document.getElementById("termek-leiras").value = "";
+  document.getElementById("termek-keszlet").value = "";
   document.getElementById("termek-ar").value = "";
   document.getElementById("termek-save-error").hidden = true;
 }
@@ -734,17 +1004,17 @@ function clearTermekForm() {
 window.editTermek = (id) => {
   const t = termekek.find(x => x.id === id);
   if (!t) return;
+  clearTermekForm();
   document.getElementById("termek-id").value = t.id;
-  document.getElementById("termek-kep").value = t.kep || "";
-  const preview = document.getElementById("termek-kep-preview");
-  if (t.kep) {
-    preview.src = "../pics/ekszerek/" + t.kep;
-    preview.style.display = "";
-  } else {
-    preview.style.display = "none";
-  }
+  termekKepAllapot = { meglevo: nyersKepLista(t), ujFajlok: [] };
+  renderKepLista("termek-kepek-lista", termekKepAllapot, "../pics/ekszerek/");
   document.getElementById("termek-nev").value = t.nev;
   document.getElementById("termek-anyag").value = t.anyag || "";
+  renderKategoriaCheckboxok("termek-kategoriak-lista", ekszerKategoriak, t.kategoriak || [], "termek");
+  document.getElementById("termek-suly").value = t.suly !== undefined ? t.suly : "";
+  document.getElementById("termek-meret").value = t.meret || "";
+  document.getElementById("termek-leiras").value = t.leiras || "";
+  document.getElementById("termek-keszlet").value = t.keszlet !== undefined ? t.keszlet : "";
   document.getElementById("termek-ar").value = t.ar !== undefined ? t.ar : "";
   document.getElementById("termek-form-title").textContent = "Termék szerkesztése";
   document.getElementById("termek-save-error").hidden = true;
@@ -753,12 +1023,15 @@ window.editTermek = (id) => {
 
 window.deleteTermek = async (id) => {
   if (!confirm("Biztosan törlöd ezt a terméket?")) return;
+  const t = termekek.find(x => x.id === id);
   await deleteDoc(doc(db, "termekek", id));
+  if (t) nyersKepLista(t).forEach(deleteStorageKepIfAny);
   await loadTermekek();
 };
 
 // --- Charm webshop ---
 let charmTermekek = [];
+let charmKepAllapot = ujKepAllapot();
 
 async function loadCharm() {
   const snap = await getDocs(collection(db, "charm_termekek"));
@@ -770,15 +1043,16 @@ async function loadCharm() {
 function renderCharm() {
   const tbody = document.getElementById("charm-table");
   if (!charmTermekek.length) {
-    tbody.innerHTML = `<tr><td colspan="5" style="color:#666;text-align:center;padding:2rem">Még nincs termék. Adj hozzá egyet!</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="color:#666;text-align:center;padding:2rem">Még nincs termék. Adj hozzá egyet!</td></tr>`;
     return;
   }
   tbody.innerHTML = charmTermekek.map(t => `
     <tr>
       <td class="ps-3">
-        ${t.kep ? `<img src="../pics/charmbar/${t.kep}" style="height:104px;width:104px;object-fit:cover;border-radius:4px;border:1px solid #444">` : '–'}
+        ${nyersKepLista(t)[0] ? `<img src="${resolveKepSrc(nyersKepLista(t)[0], '../pics/charmbar/')}" style="height:104px;width:104px;object-fit:cover;border-radius:4px;border:1px solid #444">` : '–'}
       </td>
       <td>${t.nev}</td>
+      <td>${(t.kategoriak && t.kategoriak.length) ? t.kategoriak.join(', ') : '–'}</td>
       <td>${t.anyag || '–'}</td>
       <td>${t.ar !== undefined ? t.ar.toLocaleString("hu-HU") + ' Ft' : '–'}</td>
       <td class="text-end pe-3">
@@ -799,26 +1073,19 @@ document.getElementById("cancel-charm-btn").addEventListener("click", () => {
   document.getElementById("charm-form-wrapper").hidden = true;
 });
 
-document.getElementById("charm-kep").addEventListener("change", function() {
-  const preview = document.getElementById("charm-kep-preview");
-  const placeholder = document.getElementById("charm-kep-placeholder");
-  if (this.value) {
-    preview.src = "../pics/charmbar/" + this.value;
-    preview.style.display = "";
-    placeholder.style.display = "none";
-  } else {
-    preview.style.display = "none";
-    placeholder.style.display = "";
-  }
+document.getElementById("charm-kep-file").addEventListener("change", function() {
+  kepFajlValasztasKezelo(charmKepAllapot, "charm-kepek-lista", "../pics/charmbar/", this, document.getElementById("charm-save-error"));
 });
 
 document.getElementById("save-charm-btn").addEventListener("click", async () => {
   const id = document.getElementById("charm-id").value;
-  const kep = document.getElementById("charm-kep").value;
   const nev = document.getElementById("charm-nev").value.trim();
   const anyag = document.getElementById("charm-anyag").value.trim();
+  const meret = document.getElementById("charm-meret").value.trim();
+  const kategoriak = getKivalasztottKategoriak("charm-kategoriak-lista");
   const ar = parseInt(document.getElementById("charm-ar").value);
   const errEl = document.getElementById("charm-save-error");
+  const saveBtn = document.getElementById("save-charm-btn");
 
   if (!nev) {
     errEl.textContent = "A név kötelező!";
@@ -828,13 +1095,36 @@ document.getElementById("save-charm-btn").addEventListener("click", async () => 
   errEl.hidden = true;
 
   const data = { nev };
-  if (kep) data.kep = kep;
   if (anyag) data.anyag = anyag;
+  if (meret) data.meret = meret;
+  if (kategoriak.length) data.kategoriak = kategoriak;
   if (!isNaN(ar)) data.ar = ar;
   if (!id) data.sorrend = charmTermekek.length;
 
+  saveBtn.disabled = true;
   try {
+    const ujUrlek = [];
+    if (charmKepAllapot.ujFajlok.length) {
+      const progressWrap = document.getElementById("charm-kep-progress-wrap");
+      const progressBar = document.getElementById("charm-kep-progress-bar");
+      const progressLabel = document.getElementById("charm-kep-progress-label");
+      progressWrap.style.display = "";
+      progressLabel.style.display = "";
+      for (let i = 0; i < charmKepAllapot.ujFajlok.length; i++) {
+        progressLabel.textContent = `Kép feltöltése: ${i + 1} / ${charmKepAllapot.ujFajlok.length}`;
+        const url = await uploadTermekKep(charmKepAllapot.ujFajlok[i], "charmbar", pct => { progressBar.style.width = pct + "%"; });
+        ujUrlek.push(url);
+      }
+      progressWrap.style.display = "none";
+      progressLabel.style.display = "none";
+    }
+    const vegsoKepek = charmKepAllapot.meglevo.concat(ujUrlek);
+    if (vegsoKepek.length) data.kepek = vegsoKepek;
+
     if (id) {
+      const eredeti = charmTermekek.find(x => x.id === id);
+      const torolt = eredeti ? nyersKepLista(eredeti).filter(u => !charmKepAllapot.meglevo.includes(u)) : [];
+      torolt.forEach(deleteStorageKepIfAny);
       await updateDoc(doc(db, "charm_termekek", id), data);
     } else {
       await addDoc(collection(db, "charm_termekek"), data);
@@ -844,15 +1134,24 @@ document.getElementById("save-charm-btn").addEventListener("click", async () => 
   } catch (e) {
     errEl.textContent = "Mentési hiba: " + e.message;
     errEl.hidden = false;
+  } finally {
+    saveBtn.disabled = false;
   }
 });
 
 function clearCharmForm() {
   document.getElementById("charm-id").value = "";
-  document.getElementById("charm-kep").value = "";
-  document.getElementById("charm-kep-preview").style.display = "none";
+  document.getElementById("charm-kep-file").value = "";
+  document.getElementById("charm-kep-progress-wrap").style.display = "none";
+  document.getElementById("charm-kep-progress-bar").style.width = "0%";
+  document.getElementById("charm-kep-progress-label").style.display = "none";
+  charmKepAllapot = ujKepAllapot();
+  renderKepLista("charm-kepek-lista", charmKepAllapot, "../pics/charmbar/");
   document.getElementById("charm-nev").value = "";
   document.getElementById("charm-anyag").value = "";
+  document.getElementById("charm-meret").value = "";
+  renderKategoriaCheckboxok("charm-kategoriak-lista", charmKategoriak, [], "charm");
+  document.getElementById("charm-uj-kategoria").value = "";
   document.getElementById("charm-ar").value = "";
   document.getElementById("charm-save-error").hidden = true;
 }
@@ -860,17 +1159,14 @@ function clearCharmForm() {
 window.editCharm = (id) => {
   const t = charmTermekek.find(x => x.id === id);
   if (!t) return;
+  clearCharmForm();
   document.getElementById("charm-id").value = t.id;
-  document.getElementById("charm-kep").value = t.kep || "";
-  const preview = document.getElementById("charm-kep-preview");
-  if (t.kep) {
-    preview.src = "../pics/charmbar/" + t.kep;
-    preview.style.display = "";
-  } else {
-    preview.style.display = "none";
-  }
+  charmKepAllapot = { meglevo: nyersKepLista(t), ujFajlok: [] };
+  renderKepLista("charm-kepek-lista", charmKepAllapot, "../pics/charmbar/");
   document.getElementById("charm-nev").value = t.nev;
   document.getElementById("charm-anyag").value = t.anyag || "";
+  document.getElementById("charm-meret").value = t.meret || "";
+  renderKategoriaCheckboxok("charm-kategoriak-lista", charmKategoriak, t.kategoriak || [], "charm");
   document.getElementById("charm-ar").value = t.ar !== undefined ? t.ar : "";
   document.getElementById("charm-form-title").textContent = "Charm termék szerkesztése";
   document.getElementById("charm-save-error").hidden = true;
@@ -879,7 +1175,9 @@ window.editCharm = (id) => {
 
 window.deleteCharm = async (id) => {
   if (!confirm("Biztosan törlöd ezt a terméket?")) return;
+  const t = charmTermekek.find(x => x.id === id);
   await deleteDoc(doc(db, "charm_termekek", id));
+  if (t) nyersKepLista(t).forEach(deleteStorageKepIfAny);
   await loadCharm();
 };
 

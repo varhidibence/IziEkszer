@@ -84,29 +84,3 @@ function closeEarringModal() {
   document.body.style.overflow = '';
 }
 
-// Product modal
-var productModal = document.getElementById('productModal');
-productModal.querySelector('.product-modal-close').addEventListener('click', closeProductModal);
-productModal.querySelector('.product-modal-backdrop').addEventListener('click', closeProductModal);
-
-function openProductModal(src, alt, nev, anyag, ar) {
-  productModal.querySelector('.product-modal-img').src = src;
-  productModal.querySelector('.product-modal-img').alt = alt;
-  productModal.querySelector('.product-modal-nev').textContent = nev;
-  var anyagEl = productModal.querySelector('.product-modal-anyag');
-  anyagEl.textContent = anyag || '';
-  anyagEl.style.display = anyag ? '' : 'none';
-  var arEl = productModal.querySelector('.product-modal-ar');
-  arEl.textContent = ar || '';
-  arEl.style.display = ar ? '' : 'none';
-  productModal.classList.add('active');
-  productModal.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeProductModal() {
-  productModal.classList.remove('active');
-  productModal.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
-}
-

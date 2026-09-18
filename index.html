@@ -45,12 +45,12 @@
         </li>
         <li>
           <div class="nav-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span
-              class="sep-line"></span></div><a href="#Ékszer-Futár"><img
+              class="sep-line"></span></div><a href="ekszer-webshop.html"><img
               src="pics/menu_vector_icons/03_ekszer_futar.png" alt="" class="nav-link-icon">Ékszer Futár Webshop</a>
         </li>
         <li>
           <div class="nav-separator"><span class="sep-line"></span><span class="sep-heart">&hearts;</span><span
-              class="sep-line"></span></div><a href="#charm-bar-shop"><img
+              class="sep-line"></span></div><a href="charm-webshop.html"><img
               src="pics/menu_vector_icons/04_charm_bar_webshop.png" alt="" class="nav-link-icon">Charm Bar
             Webshop</a>
         </li>
@@ -118,7 +118,7 @@
             class="sep-line"></span></div>
       </li>
       <li>
-        <a href="#Ékszer-Futár" onclick="closeMobileMenu()">
+        <a href="ekszer-webshop.html" onclick="closeMobileMenu()">
           <img src="pics/menu_vector_icons/03_ekszer_futar.png" alt="" class="menu-icon-img">
           Ékszer Futár Webshop
         </a>
@@ -126,7 +126,7 @@
             class="sep-line"></span></div>
       </li>
       <li>
-        <a href="#charm-bar-shop" onclick="closeMobileMenu()">
+        <a href="charm-webshop.html" onclick="closeMobileMenu()">
           <img src="pics/menu_vector_icons/04_charm_bar_webshop.png" alt="" class="menu-icon-img">
           Charm Bar Webshop
         </a>
@@ -145,14 +145,23 @@
 
   <!-- Hero Section -->
   <section id="hero" class="hero-section">
-    <div class="container">
-      <img src="pics/main_logo_transparent.png" alt="IziÉkszer" class="hero-logo">
-      <p class="hero-slogan">Több, mint ékszer</p>
+    <div class="hero-top">
+      <div class="hero-photo-wrap">
+        <img src="pics/hero_main_bckgrnd.png" alt="IziÉkszer" class="hero-photo">
+      </div>
+      <div class="hero-headline">
+        <p class="hero-headline-accent">Több,</p>
+        <p class="hero-headline-main">mint ékszer</p>
+        <div class="hero-sep hero-headline-sep"><span class="sep-line"></span><span class="sep-heart">♡</span><span
+            class="sep-line"></span></div>
+      </div>
+    </div>
 
+    <div class="container">
       <div class="hero-services">
         <div class="hero-service-item">
-          <div class="hero-service-circle">
-            <img src="pics/ear_holes_logo.png" alt="Fülbelövés">
+          <div class="hero-service-circle hero-service-circle--photo">
+            <img src="pics/fulbeloves_hero.png" alt="Fülbelövés">
           </div>
           <h3 class="hero-service-title">FÜLBELÖVÉS</h3>
           <div class="hero-sep"><span class="sep-line"></span><span class="sep-heart">♡</span><span
@@ -160,22 +169,22 @@
           <a href="#Fülbelövés-otthon" class="hero-tovabb-btn">TOVÁBB →</a>
         </div>
         <div class="hero-service-item">
-          <div class="hero-service-circle">
-            <img src="pics/EkszerFutar_transparent.png" alt="Ékszer Futár">
+          <div class="hero-service-circle hero-service-circle--photo">
+            <img src="pics/ekszer_futar_hero.png" alt="Ékszer Futár">
           </div>
           <h3 class="hero-service-title">ÉKSZER FUTÁR<br><span class="hero-service-sub">WEBSHOP</span></h3>
           <div class="hero-sep"><span class="sep-line"></span><span class="sep-heart">♡</span><span
               class="sep-line"></span></div>
-          <a href="#Ékszer-Futár" class="hero-tovabb-btn">TOVÁBB →</a>
+          <a href="ekszer-webshop.html" class="hero-tovabb-btn">TOVÁBB →</a>
         </div>
         <div class="hero-service-item">
-          <div class="hero-service-circle">
-            <img src="pics/izi_chamrs.png" alt="Charm Bar">
+          <div class="hero-service-circle hero-service-circle--photo">
+            <img src="pics/charm_bar_hero.png" alt="Charm Bar">
           </div>
           <h3 class="hero-service-title">CHARM BAR</h3>
           <div class="hero-sep"><span class="sep-line"></span><span class="sep-heart">♡</span><span
               class="sep-line"></span></div>
-          <a href="#charm-bar-shop" class="hero-tovabb-btn">TOVÁBB →</a>
+          <a href="charm-webshop.html" class="hero-tovabb-btn">TOVÁBB →</a>
         </div>
       </div>
 
@@ -627,7 +636,12 @@
     <div class="container">
       <h2 class="section-title">Ékszer Futár Webshop</h2>
       <div class="gold-divider"></div>
-      <div id="termekek-container" class="row g-4"></div>
+      <div class="webshop-teaser">
+        <a href="ekszer-webshop.html" class="webshop-teaser-kep-link">
+          <img id="ekszer-teaser-kep" src="pics/EkszerFutar_transparent.png" alt="Ékszer Futár Webshop" class="webshop-teaser-kep">
+        </a>
+        <a href="ekszer-webshop.html" class="btn btn-gold">Tovább a webshopra →</a>
+      </div>
     </div>
   </section>
 
@@ -651,12 +665,14 @@
             <p>📦 <strong>5. Én elkészítem</strong><br>
             Pontosan a terveid alapján összeállítom, becsomagolom és postázom.</p>
           </div>
-          <div class="esemeny-promo-kep-wrap">
-            <img src="pics/charmbar/fb_charmbar_2.jpg" alt="Charm Bar" class="esemeny-promo-kep">
-          </div>
+          <a href="charm-webshop.html" class="esemeny-promo-kep-wrap d-block">
+            <img id="charm-teaser-kep" src="pics/izi_chamrs.png" alt="Charm Bar Webshop" class="esemeny-promo-kep">
+          </a>
         </div>
       </div>
-      <div id="charm-container" class="row g-4"></div>
+      <div class="text-center">
+        <a href="charm-webshop.html" class="btn btn-gold">Tovább a webshopra →</a>
+      </div>
     </div>
   </section>
 
@@ -726,22 +742,6 @@
       <p class="footer-copy mt-2 mb-0">&copy; 2026 IziÉkszer – Minden jog fenntartva</p>
     </div>
   </footer>
-
-  <!-- Product modal -->
-  <div id="productModal" class="product-modal" aria-hidden="true">
-    <div class="product-modal-backdrop"></div>
-    <div class="product-modal-content">
-      <button class="product-modal-close" aria-label="Bezárás">&times;</button>
-      <div class="card product-card">
-        <img class="product-modal-img card-img-top" src="" alt="">
-        <div class="card-body text-center">
-          <h5 class="product-modal-nev card-title"></h5>
-          <p class="product-modal-anyag text-muted small mb-1"></p>
-          <p class="product-modal-ar price mb-0"></p>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Earring lightbox modal -->
   <div id="earringModal" class="earring-modal" aria-hidden="true">

@@ -105,14 +105,44 @@ async function loadPromo() {
   }
 }
 
-function termekKartya(t, picPath) {
+function resolveKepSrc(kep, legacyPicPath) {
+  if (!kep) return "";
+  return kep.startsWith("http") ? kep : legacyPicPath + kep;
+}
+
+function kepLista(t, legacyPicPath) {
+  const nyers = (t.kepek && t.kepek.length) ? t.kepek : (t.kep ? [t.kep] : []);
+  return nyers.map(k => resolveKepSrc(k, legacyPicPath));
+}
+
+window.__termekAdatok = { termekek: [], charm: [] };
+
+window.mutassTermek = function (lista, idx) {
+  const t = window.__termekAdatok[lista][idx];
+  if (!t) return;
+  const picPath = lista === "termekek" ? "pics/ekszerek/" : "pics/charmbar/";
+  const isEkszer = lista === "termekek";
   const arStr = t.ar !== undefined ? t.ar.toLocaleString("hu-HU") + " Ft" : "";
-  const onclick = `openProductModal('${picPath}${t.kep}','${t.nev.replace(/'/g,"\\'")}','${t.nev.replace(/'/g,"\\'")}','${(t.anyag||"").replace(/'/g,"\\'")}','${arStr}')`;
+  openProductModal(
+    kepLista(t, picPath), t.nev, t.nev, t.anyag || "", arStr,
+    { kategoriak: t.kategoriak, meret: t.meret, suly: isEkszer ? t.suly : undefined, leiras: isEkszer ? t.leiras : undefined, keszlet: isEkszer ? t.keszlet : undefined }
+  );
+};
+
+function termekKartya(t, picPath, idx, lista, isEkszer) {
+  const arStr = t.ar !== undefined ? t.ar.toLocaleString("hu-HU") + " Ft" : "";
+  const elfogyott = isEkszer && t.keszlet === 0;
+  const kategoriaBadgek = (t.kategoriak || []).map(k => `<span class="product-kategoria-badge">${k}</span>`).join("");
+  const borito = kepLista(t, picPath)[0];
   return `
     <div class="col-6 col-md-4 col-lg-3">
-      <div class="card product-card" style="cursor:pointer" onclick="${onclick}">
-        ${t.kep ? `<img src="${picPath}${t.kep}" class="card-img-top" alt="${t.nev}">` : ''}
+      <div class="card product-card" style="cursor:pointer" onclick="mutassTermek('${lista}', ${idx})">
+        <div style="position:relative">
+          ${borito ? `<img src="${borito}" class="card-img-top" alt="${t.nev}">` : ''}
+          ${elfogyott ? `<span class="product-badge-elfogyott">Elfogyott</span>` : ''}
+        </div>
         <div class="card-body text-center">
+          ${kategoriaBadgek ? `<div class="product-kategoriak">${kategoriaBadgek}</div>` : ''}
           <h6 class="card-title">${t.nev}</h6>
           ${t.anyag ? `<p class="text-muted small mb-1">${t.anyag}</p>` : ''}
           ${t.ar !== undefined ? `<p class="price">${arStr}</p>` : ''}
@@ -123,24 +153,40 @@ function termekKartya(t, picPath) {
 
 async function loadTermekek() {
   const container = document.getElementById("termekek-container");
-  if (!container) return;
+  const teaserImg = document.getElementById("ekszer-teaser-kep");
+  if (!container && !teaserImg) return;
   const snap = await getDocs(collection(db, "termekek"));
   const termekek = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   termekek.sort((a, b) => (a.sorrend || 0) - (b.sorrend || 0));
-  container.innerHTML = termekek.length
-    ? termekek.map(t => termekKartya(t, "pics/ekszerek/")).join("")
-    : `<p class="text-muted">Hamarosan...</p>`;
+  window.__termekAdatok.termekek = termekek;
+  if (container) {
+    container.innerHTML = termekek.length
+      ? termekek.map((t, i) => termekKartya(t, "pics/ekszerek/", i, "termekek", true)).join("")
+      : `<p class="text-muted">Hamarosan...</p>`;
+  }
+  if (teaserImg && termekek.length) {
+    const borito = kepLista(termekek[0], "pics/ekszerek/")[0];
+    if (borito) teaserImg.src = borito;
+  }
 }
 
 async function loadCharmTermekek() {
   const container = document.getElementById("charm-container");
-  if (!container) return;
+  const teaserImg = document.getElementById("charm-teaser-kep");
+  if (!container && !teaserImg) return;
   const snap = await getDocs(collection(db, "charm_termekek"));
   const termekek = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   termekek.sort((a, b) => (a.sorrend || 0) - (b.sorrend || 0));
-  container.innerHTML = termekek.length
-    ? termekek.map(t => termekKartya(t, "pics/charmbar/")).join("")
-    : `<p class="text-muted">Hamarosan...</p>`;
+  window.__termekAdatok.charm = termekek;
+  if (container) {
+    container.innerHTML = termekek.length
+      ? termekek.map((t, i) => termekKartya(t, "pics/charmbar/", i, "charm", false)).join("")
+      : `<p class="text-muted">Hamarosan...</p>`;
+  }
+  if (teaserImg && termekek.length) {
+    const borito = kepLista(termekek[0], "pics/charmbar/")[0];
+    if (borito) teaserImg.src = borito;
+  }
 }
 
 loadEsemenyek();

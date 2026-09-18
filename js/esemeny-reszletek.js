@@ -14,6 +14,46 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// --- EmailJS (visszaigazoló / admin értesítő email küldése regisztrációkor) ---
+// Töltsd ki a https://www.emailjs.com fiókodból az alábbi 4 azonosítót.
+// Amíg "TODO"-val kezdődnek, a rendszer nem próbál emailt küldeni – a regisztráció Firestore-ba mentése ettől függetlenül működik.
+const EMAILJS_PUBLIC_KEY = "D_mzg6JOuznQE49t-";
+const EMAILJS_SERVICE_ID = "service_izi_ekszer";
+const EMAILJS_TEMPLATE_ID_VISSZAIGAZOLAS = "template_xx5jpbe";
+const EMAILJS_TEMPLATE_ID_ADMIN = "template_s11x8uh";
+
+function emailjsKeszen() {
+  return typeof emailjs !== "undefined" && !EMAILJS_PUBLIC_KEY.startsWith("TODO");
+}
+
+if (emailjsKeszen()) {
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+}
+
+async function regisztracioEmailKuldese(e, reg) {
+  if (!emailjsKeszen()) return;
+  const datumSzoveg = new Date(e.datum).toLocaleDateString("hu-HU", { year: "numeric", month: "long", day: "numeric" });
+
+  if (!EMAILJS_TEMPLATE_ID_VISSZAIGAZOLAS.startsWith("TODO")) {
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID_VISSZAIGAZOLAS, {
+      to_name: reg.nev,
+      to_email: reg.email,
+      esemeny_cim: e.cim,
+      esemeny_datum: datumSzoveg,
+      esemeny_helyszin: e.helyszin
+    });
+  }
+  if (!EMAILJS_TEMPLATE_ID_ADMIN.startsWith("TODO")) {
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID_ADMIN, {
+      esemeny_cim: e.cim,
+      esemeny_datum: datumSzoveg,
+      nev: reg.nev,
+      email: reg.email,
+      telefon: reg.telefon
+    });
+  }
+}
+
 function textToHtml(text) {
   return text
     .split(/\n\n+/)
@@ -130,6 +170,7 @@ function setupForm(e) {
       form.reset();
       form.hidden = true;
       successEl.hidden = false;
+      regisztracioEmailKuldese(e, { nev, email, telefon }).catch(err => console.error("[esemeny] email küldési hiba:", err));
     } catch (err) {
       if (err.message === "FULL") {
         form.hidden = true;
