@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Új regisztráció – IziÉkszer</title>
+<title>Új kapcsolatfelvétel – IziÉkszer</title>
 </head>
 <body style="margin:0; padding:0; background-color:#F8ECE8; font-family: 'Segoe UI', Arial, sans-serif;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F8ECE8; padding: 32px 16px;">
@@ -22,7 +22,7 @@
           <tr>
             <td align="center" style="padding: 0 24px 16px;">
               <p style="margin:0; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:#b8944f; font-weight:600;">Admin értesítés</p>
-              <h1 style="margin:6px 0 0; font-size:20px; color:#000000; font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-weight: 400;">Új regisztráció érkezett</h1>
+              <h1 style="margin:6px 0 0; font-size:20px; color:#000000; font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-weight: 400;">Új üzenet érkezett a kapcsolat űrlapon</h1>
             </td>
           </tr>
 
@@ -33,47 +33,36 @@
             </td>
           </tr>
 
-          <!-- Esemény adatok -->
+          <!-- Feladó adatai -->
           <tr>
             <td style="padding: 22px 28px 8px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F8ECE8; border-radius:8px;">
                 <tr>
                   <td style="padding:16px 18px; border-left:4px solid #c9a96e; font-size:14px; line-height:1.9; color:#333333;">
-                    <p style="margin:0"><strong style="color:#b8944f;">Esemény:</strong> {{esemeny_cim}}</p>
-                    <p style="margin:0"><strong style="color:#b8944f;">Időpont:</strong> {{esemeny_datum}}</p>
+                    <p style="margin:0"><strong style="color:#b8944f;">Név:</strong> {{name}}</p>
+                    <p style="margin:0"><strong style="color:#b8944f;">E-mail:</strong> <a href="mailto:{{email}}" style="color:#333333; text-decoration:none;">{{email}}</a></p>
+                    <p style="margin:0"><strong style="color:#b8944f;">Tárgy:</strong> {{subject}}</p>
                   </td>
                 </tr>
               </table>
             </td>
           </tr>
 
-          <!-- Jelentkező adatai -->
+          <!-- Üzenet -->
           <tr>
             <td style="padding: 16px 28px 8px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F8ECE8; border-radius:8px;">
                 <tr>
-                  <td style="padding:16px 18px; border-left:4px solid #c9a96e; font-size:14px; line-height:1.9; color:#333333;">
-                    <p style="margin:0"><strong style="color:#b8944f;">Név:</strong> {{nev}}</p>
-                    <p style="margin:0"><strong style="color:#b8944f;">E-mail:</strong> <a href="mailto:{{email}}" style="color:#333333; text-decoration:none;">{{email}}</a></p>
-                    <p style="margin:0"><strong style="color:#b8944f;">Telefon:</strong> <a href="tel:{{telefon}}" style="color:#333333; text-decoration:none;">{{telefon}}</a></p>
-                    <p style="margin:0"><strong style="color:#b8944f;">Létszám:</strong> {{fo}} fő</p>
-                  </td>
+                  <td style="padding:16px 18px; border-left:4px solid #c9a96e; font-size:14px; line-height:1.7; color:#333333; white-space:pre-wrap;">{{message}}</td>
                 </tr>
               </table>
-            </td>
-          </tr>
-
-          <!-- CTA -->
-          <tr>
-            <td align="center" style="padding: 24px 28px 8px;">
-              <a href="https://iziekszer.web.app/admin/index.html" style="display:inline-block; background:linear-gradient(135deg,#b8944f 0%,#d4b87a 100%); color:#ffffff; font-size:13px; font-weight:600; letter-spacing:1px; text-transform:uppercase; padding:12px 28px; border-radius:30px; text-decoration:none;">Megnyitás az adminban →</a>
             </td>
           </tr>
 
           <!-- Footer -->
           <tr>
-            <td align="center" style="padding: 20px 28px 28px; font-size:12px; color:#999999;">
-              Ez egy automatikus értesítés az IziÉkszer weboldaláról.
+            <td align="center" style="padding: 24px 28px 28px; font-size:12px; color:#999999;">
+              Ez egy automatikus értesítés az IziÉkszer weboldal kapcsolat űrlapjáról.
             </td>
           </tr>
 
