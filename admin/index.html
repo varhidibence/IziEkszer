@@ -83,6 +83,7 @@
       <li class="nav-item"><a class="nav-link" data-tab="charm-webshop" href="#">Charm webshop</a></li>
       <li class="nav-item"><a class="nav-link" data-tab="workshop" href="#">Workshop</a></li>
       <li class="nav-item"><a class="nav-link" data-tab="esemeny-jelentkezok" href="#">Esemény jelentkezők</a></li>
+      <li class="nav-item"><a class="nav-link" data-tab="email-teszt" href="#">Email teszt</a></li>
     </ul>
 
     <!-- Események -->
@@ -108,6 +109,10 @@
             <div class="col-md-4">
               <label class="form-label">Dátum *</label>
               <input type="date" class="form-control" id="esemeny-datum">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Részvételi díj <span style="color:#666">(Ft/fő, üres = ingyenes/nincs megadva)</span></label>
+              <input type="number" min="0" class="form-control" id="esemeny-ar" placeholder="pl. 17990">
             </div>
             <div class="col-md-4">
               <div class="form-check mt-4 pt-1">
@@ -420,14 +425,40 @@
                 <th>Név</th>
                 <th>Email</th>
                 <th>Telefon</th>
+                <th>Fő</th>
                 <th>Jelentkezés időpontja</th>
                 <th></th>
               </tr>
             </thead>
             <tbody id="esemeny-reg-table">
-              <tr><td colspan="6" style="color:#666;text-align:center;padding:2rem">Betöltés...</td></tr>
+              <tr><td colspan="7" style="color:#666;text-align:center;padding:2rem">Betöltés...</td></tr>
             </tbody>
           </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Email teszt -->
+    <div id="tab-email-teszt" hidden>
+      <h5 class="mb-3">Email teszt</h5>
+      <p class="text-muted" style="font-size:0.9rem">Egy teszt dokumentumot ír a "mail" collection-be minta adatokkal, amit a Firestore Send Email extension kiküld. Így ellenőrizhető, hogy az SMTP beállítás és a "mail_templates" sablonok jól működnek, anélkül hogy a Firestore konzolon kellene kézzel összeállítani a dokumentumot.</p>
+      <div class="card" style="max-width:500px">
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">Sablon</label>
+            <select class="form-select" id="email-teszt-sablon">
+              <option value="esemeny-visszaigazolas">esemeny-visszaigazolas (regisztráció visszaigazolás)</option>
+              <option value="esemeny-admin-ertesites">esemeny-admin-ertesites (admin értesítés – esemény regisztráció)</option>
+              <option value="kapcsolat-admin-ertesites">kapcsolat-admin-ertesites (admin értesítés – kapcsolat form)</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Címzett email</label>
+            <input type="email" class="form-control" id="email-teszt-cim" placeholder="teszt@example.com">
+          </div>
+          <button class="btn btn-gold btn-sm" id="email-teszt-btn">Teszt email küldése</button>
+          <span id="email-teszt-siker" class="text-success small ms-2" hidden>Elküldve! Nézd meg a postafiókod pár másodperc múlva.</span>
+          <span id="email-teszt-error" class="text-danger small ms-2" hidden></span>
         </div>
       </div>
     </div>
@@ -716,6 +747,59 @@ onAuthStateChanged(auth, user => {
   }
 });
 
+// --- Email teszt ---
+const EMAIL_TESZT_MINTA_ADATOK = {
+  "esemeny-visszaigazolas": {
+    to_name: "Teszt Elek",
+    esemeny_cim: "Teszt esemény",
+    esemeny_datum: "2026. szeptember 20., vasárnap",
+    esemeny_helyszin: "Teszt helyszín",
+    esemeny_ar: "1 000 Ft/fő",
+    reg_fo: 2,
+    reg_osszeg: "2 000 Ft (2 fő)"
+  },
+  "esemeny-admin-ertesites": {
+    esemeny_cim: "Teszt esemény",
+    esemeny_datum: "2026. szeptember 20., vasárnap",
+    nev: "Teszt Elek",
+    email: "teszt.elek@example.com",
+    telefon: "+36 30 123 4567",
+    fo: 2
+  },
+  "kapcsolat-admin-ertesites": {
+    name: "Teszt Elek",
+    email: "teszt.elek@example.com",
+    subject: "Egyéb",
+    message: "Ez egy teszt üzenet a kapcsolat űrlap admin email tesztjéhez."
+  }
+};
+
+document.getElementById("email-teszt-btn").addEventListener("click", async () => {
+  const sablon = document.getElementById("email-teszt-sablon").value;
+  const cim = document.getElementById("email-teszt-cim").value.trim();
+  const siker = document.getElementById("email-teszt-siker");
+  const errEl = document.getElementById("email-teszt-error");
+  siker.hidden = true;
+  errEl.hidden = true;
+
+  if (!cim) {
+    errEl.textContent = "Adj meg egy címzett email cím!";
+    errEl.hidden = false;
+    return;
+  }
+
+  try {
+    await addDoc(collection(db, "mail"), {
+      to: cim,
+      template: { name: sablon, data: EMAIL_TESZT_MINTA_ADATOK[sablon] }
+    });
+    siker.hidden = false;
+  } catch (e) {
+    errEl.textContent = "Hiba: " + e.message;
+    errEl.hidden = false;
+  }
+});
+
 // --- Tabs ---
 document.querySelectorAll("[data-tab]").forEach(link => {
   link.addEventListener("click", e => {
@@ -776,6 +860,8 @@ document.getElementById("save-esemeny-btn").addEventListener("click", async () =
   const cim = document.getElementById("esemeny-cim").value.trim();
   const helyszin = document.getElementById("esemeny-helyszin").value.trim();
   const datum = document.getElementById("esemeny-datum").value;
+  const arRaw = document.getElementById("esemeny-ar").value.trim();
+  const ar = arRaw ? parseInt(arRaw) : null;
   const url = document.getElementById("esemeny-url").value.trim();
   const leiras = document.getElementById("esemeny-leiras").value.trim();
   const terkepCim = document.getElementById("esemeny-terkep-cim").value.trim();
@@ -791,7 +877,7 @@ document.getElementById("save-esemeny-btn").addEventListener("click", async () =
   }
   errEl.hidden = true;
 
-  const data = { cim, helyszin, datum, url: url || null, leiras: leiras || null, terkepCim: terkepCim || null, regisztracioSzukseges, letszamKorlat };
+  const data = { cim, helyszin, datum, ar, url: url || null, leiras: leiras || null, terkepCim: terkepCim || null, regisztracioSzukseges, letszamKorlat };
   if (!id) {
     data.resztvevoSzam = 0;
   } else {
@@ -818,6 +904,7 @@ function clearForm() {
   document.getElementById("esemeny-cim").value = "";
   document.getElementById("esemeny-helyszin").value = "";
   document.getElementById("esemeny-datum").value = "";
+  document.getElementById("esemeny-ar").value = "";
   document.getElementById("esemeny-url").value = "";
   document.getElementById("esemeny-leiras").value = "";
   document.getElementById("esemeny-terkep-cim").value = "";
@@ -834,6 +921,7 @@ window.editEsemeny = (id) => {
   document.getElementById("esemeny-cim").value = e.cim;
   document.getElementById("esemeny-helyszin").value = e.helyszin;
   document.getElementById("esemeny-datum").value = e.datum;
+  document.getElementById("esemeny-ar").value = e.ar != null ? e.ar : "";
   document.getElementById("esemeny-url").value = e.url || "";
   document.getElementById("esemeny-leiras").value = e.leiras || "";
   document.getElementById("esemeny-terkep-cim").value = e.terkepCim || "";
@@ -1294,7 +1382,7 @@ async function loadEsemenyRegek() {
 function renderEsemenyRegek() {
   const tbody = document.getElementById("esemeny-reg-table");
   if (!esemenyRegek.length) {
-    tbody.innerHTML = `<tr><td colspan="6" style="color:#666;text-align:center;padding:2rem">Még nincs jelentkezés.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" style="color:#666;text-align:center;padding:2rem">Még nincs jelentkezés.</td></tr>`;
     return;
   }
   tbody.innerHTML = esemenyRegek.map(r => {
@@ -1307,6 +1395,7 @@ function renderEsemenyRegek() {
       <td>${r.nev}</td>
       <td><a href="mailto:${r.email}" style="color:var(--gold)">${r.email}</a></td>
       <td>${r.telefon || '–'}</td>
+      <td>${r.fo || 1}</td>
       <td>${datum}</td>
       <td class="text-end pe-3">
         <button class="btn btn-sm" style="border:1px solid #555;color:#888" onclick="deleteEsemenyReg('${r.id}')"><i class="bi bi-trash"></i></button>

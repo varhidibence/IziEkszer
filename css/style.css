@@ -357,7 +357,7 @@ body.nav-sidebar-mode .navbar-desktop .nav-links li+li .nav-separator .sep-heart
 }
 
 body.nav-sidebar-mode .hero-section {
-  padding-top: 20px;
+  padding-top: 0px;
 }
 
 body.nav-sidebar-mode .nav-flourish {
@@ -447,7 +447,7 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
   }
 
   body.nav-sidebar-mode .hero-section {
-    padding-top: 100px;
+    padding-top: 125px;
   }
 }
 
@@ -460,10 +460,8 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 .hero-top {
   position: relative;
   display: grid;
-  min-height: 460px;
-  max-height: 620px;
+  height: clamp(460px, 34vw, 620px);
   margin-bottom: 40px;
-  overflow: hidden;
 }
 
 .hero-top > * {
@@ -474,8 +472,8 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
   position: relative;
   width: 100%;
   height: 100%;
-  margin-left: 30%;
   z-index: 0;
+  overflow: hidden;
 }
 
 .hero-photo {
@@ -484,9 +482,14 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
   object-fit: cover;
   object-position: center top;
   display: block;
-  /* a kép saját átlátszóságát mossuk el bal/alsó irányban, így a mögötte lévő valódi oldalháttér látszik át - nincs szín-eltérés, tényleg nem látszik a kép széle */
-  -webkit-mask-image: linear-gradient(to top right, transparent 0%, transparent 16%, black 62%);
-  mask-image: linear-gradient(to top right, transparent 0%, transparent 16%, black 62%);
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%),
+    linear-gradient(to bottom, black 88%, transparent 100%);
+  -webkit-mask-composite: destination-in;
+  mask-image:
+    linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%),
+    linear-gradient(to bottom, black 88%, transparent 100%);
+  mask-composite: intersect;
 }
 
 .hero-headline {
@@ -616,7 +619,7 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 
 .hero-sep .sep-line {
   flex: 1;
-  height: 1px;
+  height: 2px;
   background: var(--color-gold);
   opacity: 0.5;
   display: inline-block;
@@ -624,7 +627,7 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 
 .hero-sep .sep-heart {
   color: var(--color-gold);
-  font-size: 0.7rem;
+  font-size: 2.5rem;
   line-height: 1;
 }
 
@@ -816,6 +819,9 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 .fb-earring-grid {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--color-gold);
+  padding: 10px;
   gap: 12px;
   max-width: 800px;
   margin: 0 auto 30px;
@@ -1594,12 +1600,12 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
   }
 
   .hero-top {
-    min-height: 58vw;
+    height: 60vw;
     margin-top: -70px;
   }
 
-  .hero-photo-wrap {
-    margin-left: 26%;
+  .hero-photo {
+    object-position: left top;
   }
 
   .hero-headline {
@@ -1613,11 +1619,7 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
   }
 
   .hero-top {
-    min-height: 74vw;
-  }
-
-  .hero-photo-wrap {
-    margin-left: 22%;
+    height: 60vw;
   }
 
   .hero-headline {

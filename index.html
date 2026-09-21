@@ -149,12 +149,12 @@
       <div class="hero-photo-wrap">
         <img src="pics/hero_main_bckgrnd.png" alt="IziÉkszer" class="hero-photo">
       </div>
-      <div class="hero-headline">
+      <!-- <div class="hero-headline">
         <p class="hero-headline-accent">Több,</p>
         <p class="hero-headline-main">mint ékszer</p>
         <div class="hero-sep hero-headline-sep"><span class="sep-line"></span><span class="sep-heart">♡</span><span
             class="sep-line"></span></div>
-      </div>
+      </div> -->
     </div>
 
     <div class="container">
@@ -419,7 +419,7 @@
       <!-- Választék -->
       <div class="fb-valasztek-label">
         <span class="fb-label-line"></span>
-        <span class="fb-label-text">VÁLASZTÉK</span>
+        <span class="fb-label-text fb-box-title--gold-badge">VÁLASZTÉK</span>
         <span class="fb-label-line"></span>
       </div>
 
@@ -707,7 +707,9 @@
               <label for="message" class="form-label">Üzenet</label>
               <textarea class="form-control" id="message" rows="4" required></textarea>
             </div>
-            <button type="submit" class="btn btn-gold">Küldés</button>
+            <button type="submit" class="btn btn-gold" id="contact-form-btn">Küldés</button>
+            <p id="contact-form-success" class="mt-3" style="color:var(--color-gold)" hidden>✅ Köszönjük az üzeneted! Hamarosan válaszolunk.</p>
+            <p id="contact-form-error" class="text-danger mt-3" hidden></p>
           </form>
         </div>
         <div class="col-lg-5 offset-lg-1 mt-4 mt-lg-0">
@@ -755,6 +757,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/main.js"></script>
+  <script type="module" src="js/kapcsolat.js"></script>
   <script type="module" src="js/firebase-data.js"></script>
 </body>
 

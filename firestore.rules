@@ -6,15 +6,37 @@ service cloud.firestore {
         request.auth.token.email in ["izabella.szlovak92@gmail.com", "varhidibence93@gmail.com"];
     }
 
+    // A "Trigger Email from Firestore" extension (firestore-send-email) által figyelt
+    // collection. Bárki írhat ide egy dokumentumot, hogy emailt küldjön ki, de csak
+    // előre meghatározott sablonnal és célcímmel, hogy ne lehessen levélküldő
+    // relayként visszaélni vele.
+    function ervenyesMailDoc() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['to', 'template']) &&
+        d.to is string &&
+        d.to.matches('^[^@\\s]+@[^@\\s]+[.][^@\\s]+$') &&
+        d.template.keys().hasOnly(['name', 'data']) &&
+        d.template.data is map &&
+        (
+          d.template.name == 'esemeny-visszaigazolas' ||
+          (
+            d.template.name in ['esemeny-admin-ertesites', 'kapcsolat-admin-ertesites'] &&
+            d.to in ["izabella.szlovak92@gmail.com", "varhidibence93@gmail.com"]
+          )
+        );
+    }
+
     match /esemenyek/{doc} {
       allow read: if true;
       allow write: if isAdmin();
-      // Anyone may bump the participant counter by exactly 1 when registering
+      // Anyone may bump the participant counter by the registering group's size
       // (the registration doc itself is only readable by admins, so this is
       // the only public-facing signal of how many people already registered).
+      // Capped at 20 per registration to prevent abuse.
       allow update: if !isAdmin() &&
         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['resztvevoSzam']) &&
-        request.resource.data.resztvevoSzam == resource.data.resztvevoSzam + 1;
+        request.resource.data.resztvevoSzam > resource.data.resztvevoSzam &&
+        request.resource.data.resztvevoSzam <= resource.data.resztvevoSzam + 20;
     }
     match /arak/{doc} {
       allow read: if true;
@@ -39,6 +61,15 @@ service cloud.firestore {
     match /esemeny_regisztraciok/{doc} {
       allow read, delete: if isAdmin();
       allow create: if true;
+    }
+    match /mail/{doc} {
+      allow read, update, delete: if isAdmin();
+      // Admin szabadon írhat (pl. az admin felület email teszt eszközéhez);
+      // a nyilvános (nem bejelentkezett) írás csak a jóváhagyott sablonokra/címekre korlátozva.
+      allow create: if isAdmin() || ervenyesMailDoc();
+    }
+    match /mail_templates/{doc} {
+      allow read, write: if isAdmin();
     }
   }
 }

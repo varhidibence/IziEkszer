@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-import { getFirestore, collection, doc, getDoc, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { getFirestore, collection, doc, addDoc, getDoc, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBpANZuxKAqjOmoFFimX6A25fDbUZ_ikvQ",
@@ -14,44 +14,46 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// --- EmailJS (visszaigazoló / admin értesítő email küldése regisztrációkor) ---
-// Töltsd ki a https://www.emailjs.com fiókodból az alábbi 4 azonosítót.
-// Amíg "TODO"-val kezdődnek, a rendszer nem próbál emailt küldeni – a regisztráció Firestore-ba mentése ettől függetlenül működik.
-const EMAILJS_PUBLIC_KEY = "D_mzg6JOuznQE49t-";
-const EMAILJS_SERVICE_ID = "service_izi_ekszer";
-const EMAILJS_TEMPLATE_ID_VISSZAIGAZOLAS = "template_xx5jpbe";
-const EMAILJS_TEMPLATE_ID_ADMIN = "template_s11x8uh";
-
-function emailjsKeszen() {
-  return typeof emailjs !== "undefined" && !EMAILJS_PUBLIC_KEY.startsWith("TODO");
-}
-
-if (emailjsKeszen()) {
-  emailjs.init(EMAILJS_PUBLIC_KEY);
-}
+// --- Email küldés (Firestore "Trigger Email" extension: dokumentum a "mail"
+// collection-be, a kiterjesztés SMTP-n keresztül kiküldi a "mail_templates"
+// collection megfelelő sablonjával) ---
+const ADMIN_EMAIL = "izi.ekszer.elmeny@gmail.com";
 
 async function regisztracioEmailKuldese(e, reg) {
-  if (!emailjsKeszen()) return;
-  const datumSzoveg = new Date(e.datum).toLocaleDateString("hu-HU", { year: "numeric", month: "long", day: "numeric" });
+  const datumSzoveg = new Date(e.datum).toLocaleDateString("hu-HU", { year: "numeric", month: "long", day: "numeric", weekday: "long" });
+  const arSzoveg = e.ar != null ? `${e.ar.toLocaleString("hu-HU")} Ft/fő` : "";
+  const osszegSzoveg = e.ar != null ? `${(e.ar * reg.fo).toLocaleString("hu-HU")} Ft (${reg.fo} fő)` : "";
 
-  if (!EMAILJS_TEMPLATE_ID_VISSZAIGAZOLAS.startsWith("TODO")) {
-    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID_VISSZAIGAZOLAS, {
-      to_name: reg.nev,
-      to_email: reg.email,
-      esemeny_cim: e.cim,
-      esemeny_datum: datumSzoveg,
-      esemeny_helyszin: e.helyszin
-    });
-  }
-  if (!EMAILJS_TEMPLATE_ID_ADMIN.startsWith("TODO")) {
-    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID_ADMIN, {
-      esemeny_cim: e.cim,
-      esemeny_datum: datumSzoveg,
-      nev: reg.nev,
-      email: reg.email,
-      telefon: reg.telefon
-    });
-  }
+  await addDoc(collection(db, "mail"), {
+    to: reg.email,
+    template: {
+      name: "esemeny-visszaigazolas",
+      data: {
+        to_name: reg.nev,
+        esemeny_cim: e.cim,
+        esemeny_datum: datumSzoveg,
+        esemeny_helyszin: e.helyszin,
+        esemeny_ar: arSzoveg,
+        reg_fo: reg.fo,
+        reg_osszeg: osszegSzoveg
+      }
+    }
+  });
+
+  await addDoc(collection(db, "mail"), {
+    to: ADMIN_EMAIL,
+    template: {
+      name: "esemeny-admin-ertesites",
+      data: {
+        esemeny_cim: e.cim,
+        esemeny_datum: datumSzoveg,
+        nev: reg.nev,
+        email: reg.email,
+        telefon: reg.telefon,
+        fo: reg.fo
+      }
+    }
+  });
 }
 
 function textToHtml(text) {
@@ -140,6 +142,7 @@ function setupForm(e) {
     const nev = document.getElementById("esemeny-nev").value.trim();
     const email = document.getElementById("esemeny-email").value.trim();
     const telefon = document.getElementById("esemeny-telefon").value.trim();
+    const fo = Math.min(10, Math.max(1, parseInt(document.getElementById("esemeny-fo").value) || 1));
 
     btn.disabled = true;
     successEl.hidden = true;
@@ -154,7 +157,7 @@ function setupForm(e) {
         if (!freshSnap.exists()) throw new Error("NOTFOUND");
         const fresh = freshSnap.data();
         const current = fresh.resztvevoSzam || 0;
-        if (fresh.letszamKorlat != null && current >= fresh.letszamKorlat) {
+        if (fresh.letszamKorlat != null && current + fo > fresh.letszamKorlat) {
           throw new Error("FULL");
         }
         tx.set(regRef, {
@@ -163,14 +166,15 @@ function setupForm(e) {
           nev,
           email,
           telefon,
+          fo,
           datum: serverTimestamp()
         });
-        tx.update(eventRef, { resztvevoSzam: current + 1 });
+        tx.update(eventRef, { resztvevoSzam: current + fo });
       });
       form.reset();
       form.hidden = true;
       successEl.hidden = false;
-      regisztracioEmailKuldese(e, { nev, email, telefon }).catch(err => console.error("[esemeny] email küldési hiba:", err));
+      regisztracioEmailKuldese(e, { nev, email, telefon, fo }).catch(err => console.error("[esemeny] email küldési hiba:", err));
     } catch (err) {
       if (err.message === "FULL") {
         form.hidden = true;
