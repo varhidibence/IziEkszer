@@ -81,7 +81,6 @@
       <li class="nav-item"><a class="nav-link" data-tab="arak" href="#">Árak</a></li>
       <li class="nav-item"><a class="nav-link" data-tab="ekszer-webshop" href="#">Ékszer webshop</a></li>
       <li class="nav-item"><a class="nav-link" data-tab="charm-webshop" href="#">Charm webshop</a></li>
-      <li class="nav-item"><a class="nav-link" data-tab="workshop" href="#">Workshop</a></li>
       <li class="nav-item"><a class="nav-link" data-tab="esemeny-jelentkezok" href="#">Esemény jelentkezők</a></li>
       <li class="nav-item"><a class="nav-link" data-tab="email-teszt" href="#">Email teszt</a></li>
     </ul>
@@ -385,36 +384,14 @@
       </div>
     </div>
 
-    <!-- Workshop regisztrációk -->
-    <div id="tab-workshop" hidden>
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0">Workshop regisztrációk</h5>
-        <span id="workshop-szamlalo" class="text-muted" style="font-size:0.9rem"></span>
-      </div>
-      <div class="card">
-        <div class="card-body p-0">
-          <table class="table mb-0">
-            <thead>
-              <tr>
-                <th class="ps-3">Név</th>
-                <th>Email</th>
-                <th>Regisztráció időpontja</th>
-                <th>Fizetve</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="workshop-table">
-              <tr><td colspan="5" style="color:#666;text-align:center;padding:2rem">Betöltés...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
     <!-- Esemény jelentkezők -->
     <div id="tab-esemeny-jelentkezok" hidden>
-      <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
         <h5 class="mb-0">Esemény jelentkezők</h5>
+        <div class="d-flex align-items-center gap-2">
+          <select class="form-select form-select-sm" id="esemeny-reg-szuro" style="width:auto"></select>
+          <button class="btn btn-outline-gold btn-sm" id="esemeny-letszam-ujraszamol-btn">Létszám újraszámolása</button>
+        </div>
       </div>
       <div class="card">
         <div class="card-body p-0">
@@ -427,10 +404,33 @@
                 <th>Telefon</th>
                 <th>Fő</th>
                 <th>Jelentkezés időpontja</th>
+                <th>Fizetve</th>
                 <th></th>
               </tr>
             </thead>
             <tbody id="esemeny-reg-table">
+              <tr><td colspan="8" style="color:#666;text-align:center;padding:2rem">Betöltés...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h6 class="mt-4 mb-2" style="color:#888">Törölt jelentkezések</h6>
+      <div class="card">
+        <div class="card-body p-0">
+          <table class="table mb-0">
+            <thead>
+              <tr>
+                <th class="ps-3">Esemény</th>
+                <th>Név</th>
+                <th>Email</th>
+                <th>Telefon</th>
+                <th>Fő</th>
+                <th>Törölve</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="esemeny-reg-torolt-table">
               <tr><td colspan="7" style="color:#666;text-align:center;padding:2rem">Betöltés...</td></tr>
             </tbody>
           </table>
@@ -502,7 +502,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-import { getFirestore, collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, setDoc, orderBy, query, increment, arrayUnion } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, setDoc, orderBy, query, increment, arrayUnion, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-storage.js";
 
 const firebaseConfig = {
@@ -742,7 +742,6 @@ onAuthStateChanged(auth, user => {
     loadKategoriak();
     loadTermekek();
     loadCharm();
-    loadWorkshop();
     loadEsemenyRegek();
   }
 });
@@ -819,6 +818,13 @@ async function loadEsemenyek() {
   const snap = await getDocs(q);
   esemenyek = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   renderEsemenyek();
+  renderEsemenyRegSzuro();
+}
+
+function esemenyAktivLetszam(esemenyId) {
+  return esemenyRegek
+    .filter(r => r.esemenyId === esemenyId && !r.torolve)
+    .reduce((sum, r) => sum + (r.fo || 1), 0);
 }
 
 function renderEsemenyek() {
@@ -836,7 +842,7 @@ function renderEsemenyek() {
       </td>
       <td>${e.cim}</td>
       <td>${e.helyszin}</td>
-      <td>${e.regisztracioSzukseges ? `<a href="../esemeny.html?id=${e.id}" target="_blank" style="color:var(--gold)">${e.resztvevoSzam || 0}${e.letszamKorlat ? ' / ' + e.letszamKorlat : ''} fő <i class="bi bi-box-arrow-up-right"></i></a>` : '–'}</td>
+      <td>${e.regisztracioSzukseges ? `<a href="../esemeny.html?id=${e.id}" target="_blank" style="color:var(--gold)">${esemenyAktivLetszam(e.id)}${e.letszamKorlat ? ' / ' + e.letszamKorlat : ''} fő <i class="bi bi-box-arrow-up-right"></i></a>` : '–'}</td>
       <td class="text-end pe-3">
         <button class="btn btn-outline-gold btn-sm me-1" onclick="editEsemeny('${e.id}')"><i class="bi bi-pencil"></i></button>
         <button class="btn btn-sm" style="border:1px solid #555;color:#888" onclick="deleteEsemeny('${e.id}')"><i class="bi bi-trash"></i></button>
@@ -1318,99 +1324,102 @@ document.getElementById("save-promo-btn").addEventListener("click", async () => 
   }
 });
 
-// --- Workshop regisztrációk ---
-let workshopRegek = [];
-
-async function loadWorkshop() {
-  const q = query(collection(db, "workshop_regisztraciok"), orderBy("datum", "desc"));
-  const snap = await getDocs(q);
-  workshopRegek = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  renderWorkshop();
-}
-
-function renderWorkshop() {
-  const tbody = document.getElementById("workshop-table");
-  const szamlalo = document.getElementById("workshop-szamlalo");
-  szamlalo.textContent = workshopRegek.length + " / 15 fő";
-  if (!workshopRegek.length) {
-    tbody.innerHTML = `<tr><td colspan="4" style="color:#666;text-align:center;padding:2rem">Még nincs regisztráció.</td></tr>`;
-    return;
-  }
-  tbody.innerHTML = workshopRegek.map(r => {
-    const datum = r.datum?.toDate
-      ? r.datum.toDate().toLocaleString("hu-HU", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" })
-      : "–";
-    const fizetve = !!r.fizetve;
-    return `
-    <tr>
-      <td class="ps-3">${r.nev}</td>
-      <td><a href="mailto:${r.email}" style="color:var(--gold)">${r.email}</a></td>
-      <td>${datum}</td>
-      <td>
-        <button class="btn btn-sm ${fizetve ? 'btn-gold' : 'btn-outline-gold'}" onclick="toggleFizetve('${r.id}', ${fizetve})">
-          ${fizetve ? '<i class="bi bi-check-circle-fill me-1"></i>Fizetve' : '<i class="bi bi-circle me-1"></i>Nem fizetve'}
-        </button>
-      </td>
-      <td class="text-end pe-3">
-        <button class="btn btn-sm" style="border:1px solid #555;color:#888" onclick="deleteWorkshopReg('${r.id}')"><i class="bi bi-trash"></i></button>
-      </td>
-    </tr>`;
-  }).join("");
-}
-
-window.toggleFizetve = async (id, jelenlegiFizetve) => {
-  await updateDoc(doc(db, "workshop_regisztraciok", id), { fizetve: !jelenlegiFizetve });
-  await loadWorkshop();
-};
-
-window.deleteWorkshopReg = async (id) => {
-  if (!confirm("Biztosan törlöd ezt a regisztrációt?")) return;
-  await deleteDoc(doc(db, "workshop_regisztraciok", id));
-  await loadWorkshop();
-};
-
 // --- Esemény jelentkezők ---
 let esemenyRegek = [];
+let esemenyRegSzuroId = "";
 
 async function loadEsemenyRegek() {
   const q = query(collection(db, "esemeny_regisztraciok"), orderBy("datum", "desc"));
   const snap = await getDocs(q);
   esemenyRegek = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  renderEsemenyRegSzuro();
   renderEsemenyRegek();
+  renderEsemenyek();
 }
+
+function renderEsemenyRegSzuro() {
+  const sel = document.getElementById("esemeny-reg-szuro");
+  if (!esemenyek.length) return;
+  if (!esemenyRegSzuroId || !esemenyek.some(e => e.id === esemenyRegSzuroId)) {
+    esemenyRegSzuroId = esemenyek[0].id;
+  }
+  sel.innerHTML = esemenyek.map(e => `<option value="${e.id}" ${e.id === esemenyRegSzuroId ? "selected" : ""}>${e.cim} (${e.datum})</option>`).join("");
+}
+
+document.getElementById("esemeny-reg-szuro").addEventListener("change", (e) => {
+  esemenyRegSzuroId = e.target.value;
+  renderEsemenyRegek();
+});
 
 function renderEsemenyRegek() {
   const tbody = document.getElementById("esemeny-reg-table");
-  if (!esemenyRegek.length) {
-    tbody.innerHTML = `<tr><td colspan="7" style="color:#666;text-align:center;padding:2rem">Még nincs jelentkezés.</td></tr>`;
-    return;
+  const toroltTbody = document.getElementById("esemeny-reg-torolt-table");
+  const aktivReg = esemenyRegek.filter(r => !r.torolve && r.esemenyId === esemenyRegSzuroId);
+  const toroltReg = esemenyRegek.filter(r => r.torolve && r.esemenyId === esemenyRegSzuroId);
+
+  if (!aktivReg.length) {
+    tbody.innerHTML = `<tr><td colspan="8" style="color:#666;text-align:center;padding:2rem">Még nincs jelentkezés ehhez az eseményhez.</td></tr>`;
+  } else {
+    tbody.innerHTML = aktivReg.map(r => {
+      const datum = r.datum?.toDate
+        ? r.datum.toDate().toLocaleString("hu-HU", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" })
+        : "–";
+      const fizetve = !!r.fizetve;
+      return `
+      <tr>
+        <td class="ps-3">${r.esemenyCim || '–'}</td>
+        <td>${r.nev}</td>
+        <td><a href="mailto:${r.email}" style="color:var(--gold)">${r.email}</a></td>
+        <td>${r.telefon || '–'}</td>
+        <td>${r.fo || 1}</td>
+        <td>${datum}</td>
+        <td>
+          <button class="btn btn-sm ${fizetve ? 'btn-gold' : 'btn-outline-gold'}" onclick="toggleEsemenyRegFizetve('${r.id}', ${fizetve})">
+            ${fizetve ? '<i class="bi bi-check-circle-fill me-1"></i>Fizetve' : '<i class="bi bi-circle me-1"></i>Nem fizetve'}
+          </button>
+        </td>
+        <td class="text-end pe-3">
+          <button class="btn btn-sm" style="border:1px solid #555;color:#888" onclick="deleteEsemenyReg('${r.id}')"><i class="bi bi-trash"></i></button>
+        </td>
+      </tr>`;
+    }).join("");
   }
-  tbody.innerHTML = esemenyRegek.map(r => {
-    const datum = r.datum?.toDate
-      ? r.datum.toDate().toLocaleString("hu-HU", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" })
-      : "–";
-    return `
-    <tr>
-      <td class="ps-3">${r.esemenyCim || '–'}</td>
-      <td>${r.nev}</td>
-      <td><a href="mailto:${r.email}" style="color:var(--gold)">${r.email}</a></td>
-      <td>${r.telefon || '–'}</td>
-      <td>${r.fo || 1}</td>
-      <td>${datum}</td>
-      <td class="text-end pe-3">
-        <button class="btn btn-sm" style="border:1px solid #555;color:#888" onclick="deleteEsemenyReg('${r.id}')"><i class="bi bi-trash"></i></button>
-      </td>
-    </tr>`;
-  }).join("");
+
+  if (!toroltReg.length) {
+    toroltTbody.innerHTML = `<tr><td colspan="7" style="color:#666;text-align:center;padding:2rem">Nincs törölt jelentkezés ehhez az eseményhez.</td></tr>`;
+  } else {
+    toroltTbody.innerHTML = toroltReg.map(r => {
+      const torolveDatum = r.torolveDatum?.toDate
+        ? r.torolveDatum.toDate().toLocaleString("hu-HU", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" })
+        : "–";
+      return `
+      <tr style="opacity:0.65">
+        <td class="ps-3">${r.esemenyCim || '–'}</td>
+        <td>${r.nev}</td>
+        <td><a href="mailto:${r.email}" style="color:var(--gold)">${r.email}</a></td>
+        <td>${r.telefon || '–'}</td>
+        <td>${r.fo || 1}</td>
+        <td>${torolveDatum}</td>
+        <td class="text-end pe-3">
+          <button class="btn btn-outline-gold btn-sm" onclick="restoreEsemenyReg('${r.id}')"><i class="bi bi-arrow-counterclockwise"></i> Visszaállítás</button>
+        </td>
+      </tr>`;
+    }).join("");
+  }
 }
 
+window.toggleEsemenyRegFizetve = async (id, jelenlegiFizetve) => {
+  await updateDoc(doc(db, "esemeny_regisztraciok", id), { fizetve: !jelenlegiFizetve });
+  await loadEsemenyRegek();
+};
+
 window.deleteEsemenyReg = async (id) => {
-  if (!confirm("Biztosan törlöd ezt a jelentkezést?")) return;
+  if (!confirm("Biztosan törlöd ezt a jelentkezést? A törölt jelentkezés a \"Törölt jelentkezések\" táblázatban marad, onnan visszaállítható.")) return;
   const reg = esemenyRegek.find(r => r.id === id);
-  await deleteDoc(doc(db, "esemeny_regisztraciok", id));
+  await updateDoc(doc(db, "esemeny_regisztraciok", id), { torolve: true, torolveDatum: serverTimestamp() });
   if (reg?.esemenyId) {
     try {
-      await updateDoc(doc(db, "esemenyek", reg.esemenyId), { resztvevoSzam: increment(-1) });
+      await updateDoc(doc(db, "esemenyek", reg.esemenyId), { resztvevoSzam: increment(-(reg.fo || 1)) });
     } catch (e) {
       // az esemény már törölve lehet, ez nem hiba
     }
@@ -1418,6 +1427,31 @@ window.deleteEsemenyReg = async (id) => {
   await loadEsemenyRegek();
   await loadEsemenyek();
 };
+
+window.restoreEsemenyReg = async (id) => {
+  const reg = esemenyRegek.find(r => r.id === id);
+  await updateDoc(doc(db, "esemeny_regisztraciok", id), { torolve: false });
+  if (reg?.esemenyId) {
+    try {
+      await updateDoc(doc(db, "esemenyek", reg.esemenyId), { resztvevoSzam: increment(reg.fo || 1) });
+    } catch (e) {
+      // az esemény már törölve lehet, ez nem hiba
+    }
+  }
+  await loadEsemenyRegek();
+  await loadEsemenyek();
+};
+
+document.getElementById("esemeny-letszam-ujraszamol-btn").addEventListener("click", async () => {
+  if (!esemenyRegSzuroId) return;
+  const osszeg = esemenyRegek
+    .filter(r => r.esemenyId === esemenyRegSzuroId && !r.torolve)
+    .reduce((sum, r) => sum + (r.fo || 1), 0);
+  await updateDoc(doc(db, "esemenyek", esemenyRegSzuroId), { resztvevoSzam: osszeg });
+  await loadEsemenyek();
+  renderEsemenyRegSzuro();
+  alert(`Létszám frissítve: ${osszeg} fő.`);
+});
 
 // --- Árak ---
 async function loadArak() {

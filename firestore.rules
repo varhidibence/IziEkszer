@@ -21,7 +21,7 @@ service cloud.firestore {
           d.template.name == 'esemeny-visszaigazolas' ||
           (
             d.template.name in ['esemeny-admin-ertesites', 'kapcsolat-admin-ertesites'] &&
-            d.to in ["izabella.szlovak92@gmail.com", "varhidibence93@gmail.com"]
+            d.to in ["izi.ekszer.elmeny@gmail.com", "izabella.szlovak92@gmail.com", "varhidibence93@gmail.com"]
           )
         );
     }
@@ -59,7 +59,7 @@ service cloud.firestore {
       allow create: if true;
     }
     match /esemeny_regisztraciok/{doc} {
-      allow read, delete: if isAdmin();
+      allow read, update, delete: if isAdmin();
       allow create: if true;
     }
     match /mail/{doc} {
