@@ -26,7 +26,7 @@ function esemenyKartya(e, isPast) {
     <div class="card event-card${isPast ? ' korabbi' : ''}${kulsoLink ? ' event-card--link' : ''}">
       <div class="card-body">
         <h5 class="card-title"><i class="bi bi-calendar-event me-2" style="color: var(--color-gold)"></i>${e.cim}${kulsoLink ? ' <i class="bi bi-box-arrow-up-right event-card-ext" title="Megnyitás"></i>' : ''}</h5>
-        <p class="text-muted">${honapNagybetu} ${nap}. ${napNeve} – ${e.helyszin}</p>
+        <p class="text-muted">${honapNagybetu} ${nap}. ${napNeve}${e.idopont ? `, ${e.idopont}` : ''} – ${e.helyszin}</p>
         ${vanReszletek ? `<a href="esemeny.html?id=${e.id}" class="btn btn-gold btn-sm mt-2">Részletek és regisztráció</a>` : ''}
       </div>
     </div>`;

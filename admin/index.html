@@ -110,6 +110,10 @@
               <input type="date" class="form-control" id="esemeny-datum">
             </div>
             <div class="col-md-4">
+              <label class="form-label">Időpont <span style="color:#666">(szabad szöveg, opcionális, pl. 9:00-11:00)</span></label>
+              <input type="text" class="form-control" id="esemeny-idopont" placeholder="pl. 9:00-11:00">
+            </div>
+            <div class="col-md-4">
               <label class="form-label">Részvételi díj <span style="color:#666">(Ft/fő, üres = ingyenes/nincs megadva)</span></label>
               <input type="number" min="0" class="form-control" id="esemeny-ar" placeholder="pl. 17990">
             </div>
@@ -751,7 +755,7 @@ const EMAIL_TESZT_MINTA_ADATOK = {
   "esemeny-visszaigazolas": {
     to_name: "Teszt Elek",
     esemeny_cim: "Teszt esemény",
-    esemeny_datum: "2026. szeptember 20., vasárnap",
+    esemeny_datum: "2026. szeptember 20., vasárnap, 9:00-11:00",
     esemeny_helyszin: "Teszt helyszín",
     esemeny_ar: "1 000 Ft/fő",
     reg_fo: 2,
@@ -759,7 +763,7 @@ const EMAIL_TESZT_MINTA_ADATOK = {
   },
   "esemeny-admin-ertesites": {
     esemeny_cim: "Teszt esemény",
-    esemeny_datum: "2026. szeptember 20., vasárnap",
+    esemeny_datum: "2026. szeptember 20., vasárnap, 9:00-11:00",
     nev: "Teszt Elek",
     email: "teszt.elek@example.com",
     telefon: "+36 30 123 4567",
@@ -837,7 +841,7 @@ function renderEsemenyek() {
   tbody.innerHTML = esemenyek.map(e => `
     <tr>
       <td class="ps-3">
-        ${e.datum}
+        ${e.datum}${e.idopont ? ` <span class="text-muted">(${e.idopont})</span>` : ''}
         <span class="${e.datum >= ma ? 'badge-upcoming' : 'badge-past'}">${e.datum >= ma ? 'Közelgő' : 'Korábbi'}</span>
       </td>
       <td>${e.cim}</td>
@@ -866,6 +870,7 @@ document.getElementById("save-esemeny-btn").addEventListener("click", async () =
   const cim = document.getElementById("esemeny-cim").value.trim();
   const helyszin = document.getElementById("esemeny-helyszin").value.trim();
   const datum = document.getElementById("esemeny-datum").value;
+  const idopont = document.getElementById("esemeny-idopont").value.trim();
   const arRaw = document.getElementById("esemeny-ar").value.trim();
   const ar = arRaw ? parseInt(arRaw) : null;
   const url = document.getElementById("esemeny-url").value.trim();
@@ -883,7 +888,7 @@ document.getElementById("save-esemeny-btn").addEventListener("click", async () =
   }
   errEl.hidden = true;
 
-  const data = { cim, helyszin, datum, ar, url: url || null, leiras: leiras || null, terkepCim: terkepCim || null, regisztracioSzukseges, letszamKorlat };
+  const data = { cim, helyszin, datum, idopont: idopont || null, ar, url: url || null, leiras: leiras || null, terkepCim: terkepCim || null, regisztracioSzukseges, letszamKorlat };
   if (!id) {
     data.resztvevoSzam = 0;
   } else {
@@ -910,6 +915,7 @@ function clearForm() {
   document.getElementById("esemeny-cim").value = "";
   document.getElementById("esemeny-helyszin").value = "";
   document.getElementById("esemeny-datum").value = "";
+  document.getElementById("esemeny-idopont").value = "";
   document.getElementById("esemeny-ar").value = "";
   document.getElementById("esemeny-url").value = "";
   document.getElementById("esemeny-leiras").value = "";
@@ -927,6 +933,7 @@ window.editEsemeny = (id) => {
   document.getElementById("esemeny-cim").value = e.cim;
   document.getElementById("esemeny-helyszin").value = e.helyszin;
   document.getElementById("esemeny-datum").value = e.datum;
+  document.getElementById("esemeny-idopont").value = e.idopont || "";
   document.getElementById("esemeny-ar").value = e.ar != null ? e.ar : "";
   document.getElementById("esemeny-url").value = e.url || "";
   document.getElementById("esemeny-leiras").value = e.leiras || "";

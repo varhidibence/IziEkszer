@@ -20,7 +20,7 @@ const db = getFirestore(app);
 const ADMIN_EMAIL = "izi.ekszer.elmeny@gmail.com";
 
 async function regisztracioEmailKuldese(e, reg) {
-  const datumSzoveg = new Date(e.datum).toLocaleDateString("hu-HU", { year: "numeric", month: "long", day: "numeric", weekday: "long" });
+  const datumSzoveg = new Date(e.datum).toLocaleDateString("hu-HU", { year: "numeric", month: "long", day: "numeric", weekday: "long" }) + (e.idopont ? `, ${e.idopont}` : "");
   const arSzoveg = e.ar != null ? `${e.ar.toLocaleString("hu-HU")} Ft/fő` : "";
   const osszegSzoveg = e.ar != null ? `${(e.ar * reg.fo).toLocaleString("hu-HU")} Ft (${reg.fo} fő)` : "";
 
@@ -91,7 +91,7 @@ async function init() {
 
     document.title = e.cim + " – IziÉkszer";
     document.getElementById("esemeny-cim").textContent = e.cim;
-    document.getElementById("esemeny-datum").textContent = `${honapNagybetu} ${d.getDate()}. ${napNeve} – ${e.helyszin}`;
+    document.getElementById("esemeny-datum").textContent = `${honapNagybetu} ${d.getDate()}. ${napNeve}${e.idopont ? `, ${e.idopont}` : ""} – ${e.helyszin}`;
     document.getElementById("esemeny-leiras").innerHTML = e.leiras ? textToHtml(e.leiras) : "";
 
     const mapEl = document.getElementById("esemeny-map");
@@ -111,11 +111,11 @@ async function init() {
     } else if (e.regisztracioSzukseges && betelt) {
       document.getElementById("esemeny-betelt").hidden = false;
     } else if (e.regisztracioSzukseges) {
-      if (e.letszamKorlat != null) {
-        const infoEl = document.getElementById("esemeny-letszam-info");
-        infoEl.textContent = `${resztvevoSzam} / ${e.letszamKorlat} fő regisztrált eddig.`;
-        infoEl.hidden = false;
-      }
+      // if (e.letszamKorlat != null) {
+      //   const infoEl = document.getElementById("esemeny-letszam-info");
+      //   infoEl.textContent = `${resztvevoSzam} / ${e.letszamKorlat} fő regisztrált eddig.`;
+      //   infoEl.hidden = false;
+      // }
       setupForm(e);
       document.getElementById("esemeny-reg-wrap").hidden = false;
     }
