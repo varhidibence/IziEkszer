@@ -94,10 +94,11 @@ async function init() {
     document.getElementById("esemeny-datum").textContent = `${honapNagybetu} ${d.getDate()}. ${napNeve}${e.idopont ? `, ${e.idopont}` : ""} – ${e.helyszin}`;
     document.getElementById("esemeny-leiras").innerHTML = e.leiras ? textToHtml(e.leiras) : "";
 
-    const mapEl = document.getElementById("esemeny-map");
+    const mapEls = document.querySelectorAll(".esemeny-map");
     const terkepCim = e.terkepCim || e.helyszin;
-    if (mapEl && terkepCim) {
-      mapEl.src = `https://www.google.com/maps?q=${encodeURIComponent(terkepCim)}&output=embed`;
+    if (mapEls.length && terkepCim) {
+      const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(terkepCim)}&output=embed`;
+      mapEls.forEach((el) => { el.src = mapSrc; });
     }
 
     const ma = new Date();
