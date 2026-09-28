@@ -18,7 +18,7 @@ html {
 }
 
 body {
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Montserrat';
   background: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-main-end) 100%);
   background-attachment: fixed;
   color: var(--color-primary);
@@ -92,8 +92,8 @@ html {
 
 .navbar-desktop .nav-links a {
   color: var(--color-menu-text);
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 1.15rem;
+  font-family: 'Montserrat';
+  font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.5px;
   padding: 8px 14px;
@@ -688,10 +688,11 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 }
 
 .fb-intro-text {
-  font-size: 1.05rem;
-  line-height: 1.8;
+  font-size: 1rem;
+  font-family: 'Montserrat';
   color: var(--color-primary);
   padding-left: 10px;
+  padding-right: 10px;
 }
 
 .fb-intro-photo-wrapper {
@@ -743,7 +744,7 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 
 /* === Fülbelövés Section === */
 .fulbeloves-section {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: 'Montserrat';
 }
 
 .fb-header {
@@ -918,7 +919,7 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 }
 
 .fb-price {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: 'Montserrat';
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--color-gold);
@@ -1264,6 +1265,8 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 .rendezv-ujdonsag,
 .rendezv-miert {
   font-size: 1.2rem;
+  font-family: 'Montserrat';
+  padding: 0 10px;
   font-weight: 700;
   color: var(--color-primary);
   margin: 0 0 4px;
@@ -1307,7 +1310,7 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 /* === Sections === */
 .section-block {
   padding: 80px 0;
-  font-family: 'Times New Roman', Times, serif;
+  font-family: 'Montserrat';
 }
 
 .section-alt {
@@ -1330,7 +1333,7 @@ body.nav-sidebar-mode .navbar-desktop .nav-links a {
 }
 
 .section-text {
-  font-size: 1.1rem;
+  font-size: 1.0rem;
   line-height: 1.8;
   color: var(--color-text-muted);
 }
