@@ -391,7 +391,7 @@
     <!-- Esemény jelentkezők -->
     <div id="tab-esemeny-jelentkezok" hidden>
       <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-        <h5 class="mb-0">Esemény jelentkezők</h5>
+        <h5 class="mb-0">Esemény jelentkezők <span id="esemeny-reg-letszam" style="color:var(--gold)"></span></h5>
         <div class="d-flex align-items-center gap-2">
           <select class="form-select form-select-sm" id="esemeny-reg-szuro" style="width:auto"></select>
           <button class="btn btn-outline-gold btn-sm" id="esemeny-letszam-ujraszamol-btn">Létszám újraszámolása</button>
@@ -823,6 +823,7 @@ async function loadEsemenyek() {
   esemenyek = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   renderEsemenyek();
   renderEsemenyRegSzuro();
+  renderEsemenyRegek();
 }
 
 function esemenyAktivLetszam(esemenyId) {
@@ -1364,6 +1365,11 @@ function renderEsemenyRegek() {
   const aktivReg = esemenyRegek.filter(r => !r.torolve && r.esemenyId === esemenyRegSzuroId);
   const toroltReg = esemenyRegek.filter(r => r.torolve && r.esemenyId === esemenyRegSzuroId);
 
+  const szurtEsemeny = esemenyek.find(e => e.id === esemenyRegSzuroId);
+  document.getElementById("esemeny-reg-letszam").textContent = szurtEsemeny
+    ? `– ${esemenyAktivLetszam(esemenyRegSzuroId)}/${szurtEsemeny.letszamKorlat || '∞'}`
+    : "";
+
   if (!aktivReg.length) {
     tbody.innerHTML = `<tr><td colspan="8" style="color:#666;text-align:center;padding:2rem">Még nincs jelentkezés ehhez az eseményhez.</td></tr>`;
   } else {
@@ -1378,7 +1384,7 @@ function renderEsemenyRegek() {
         <td>${r.nev}</td>
         <td><a href="mailto:${r.email}" style="color:var(--gold)">${r.email}</a></td>
         <td>${r.telefon || '–'}</td>
-        <td>${r.fo || 1}</td>
+        <td><input type="number" min="1" class="form-control form-control-sm" style="width:4.5rem" value="${r.fo || 1}" onchange="updateEsemenyRegFo('${r.id}', this)"></td>
         <td>${datum}</td>
         <td>
           <button class="btn btn-sm ${fizetve ? 'btn-gold' : 'btn-outline-gold'}" onclick="toggleEsemenyRegFizetve('${r.id}', ${fizetve})">
@@ -1418,6 +1424,26 @@ function renderEsemenyRegek() {
 window.toggleEsemenyRegFizetve = async (id, jelenlegiFizetve) => {
   await updateDoc(doc(db, "esemeny_regisztraciok", id), { fizetve: !jelenlegiFizetve });
   await loadEsemenyRegek();
+};
+
+window.updateEsemenyRegFo = async (id, input) => {
+  const reg = esemenyRegek.find(r => r.id === id);
+  const fo = parseInt(input.value);
+  if (!reg || !Number.isInteger(fo) || fo < 1) {
+    input.value = reg?.fo || 1;
+    return;
+  }
+  await updateDoc(doc(db, "esemeny_regisztraciok", id), { fo });
+  reg.fo = fo;
+  if (reg.esemenyId) {
+    try {
+      await updateDoc(doc(db, "esemenyek", reg.esemenyId), { resztvevoSzam: esemenyAktivLetszam(reg.esemenyId) });
+    } catch (e) {
+      // az esemény már törölve lehet, ez nem hiba
+    }
+  }
+  await loadEsemenyRegek();
+  await loadEsemenyek();
 };
 
 window.deleteEsemenyReg = async (id) => {
